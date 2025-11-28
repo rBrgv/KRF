@@ -208,7 +208,7 @@ export async function POST(request: NextRequest) {
       success: true,
       message: 'Notification sending completed',
       processed: pendingNotifications.length,
-      success: successCount,
+      successCount: successCount,
       failed: failureCount,
     });
   } catch (error: any) {
