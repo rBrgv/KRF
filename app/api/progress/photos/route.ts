@@ -171,7 +171,7 @@ export async function DELETE(request: NextRequest) {
       .single();
 
     if (!photo) {
-      return serverErrorResponse('Photo not found', '', 404);
+      return errorResponse('Photo not found', 'NOT_FOUND', undefined, 404);
     }
 
     // If client, can only delete their own photos
