@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { requireAuth } from '@/lib/api/auth';
-import { successResponse, serverErrorResponse, unauthorizedResponse } from '@/lib/api/response';
+import { successResponse, serverErrorResponse, unauthorizedResponse, errorResponse } from '@/lib/api/response';
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     const viewType = formData.get('view_type') as string;
 
     if (!file || !clientId || !date || !viewType) {
-      return serverErrorResponse('Missing required fields: file, client_id, date, view_type', '', 400);
+      return errorResponse('Missing required fields: file, client_id, date, view_type', 'BAD_REQUEST', undefined, 400);
     }
 
     const supabase = await createClient();
@@ -42,12 +42,12 @@ export async function POST(request: NextRequest) {
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
-      return serverErrorResponse('File must be an image', '', 400);
+      return errorResponse('File must be an image', 'BAD_REQUEST', undefined, 400);
     }
 
     // Validate file size (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
-      return serverErrorResponse('File size must be less than 10MB', '', 400);
+      return errorResponse('File size must be less than 10MB', 'BAD_REQUEST', undefined, 400);
     }
 
     // Generate unique filename
