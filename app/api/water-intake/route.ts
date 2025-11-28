@@ -197,7 +197,7 @@ export async function PATCH(request: NextRequest) {
       .single();
 
     if (!log) {
-      return serverErrorResponse('Water intake log not found', '', 404);
+      return errorResponse('Water intake log not found', 'NOT_FOUND', undefined, 404);
     }
 
     // If client, can only update their own logs
