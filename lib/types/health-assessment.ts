@@ -39,6 +39,7 @@ export type QuestionBase = {
   section: QuestionSection;
   question: string;
   required?: boolean;
+  optional?: boolean;
 };
 
 export type ScaleQuestion = QuestionBase & {
