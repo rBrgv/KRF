@@ -81,7 +81,8 @@ export async function POST(request: NextRequest) {
     // Process each notification
     for (const notification of pendingNotifications) {
       try {
-        const client = notification.clients;
+        // Handle clients as array or single object
+        const client = Array.isArray(notification.clients) ? notification.clients[0] : notification.clients;
         const payload = notification.payload as any;
 
         if (notification.channel === 'email') {
