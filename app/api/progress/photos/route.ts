@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { requireAuth, getPaginationParams } from '@/lib/api/auth';
-import { successResponse, serverErrorResponse, validationErrorResponse, unauthorizedResponse } from '@/lib/api/response';
+import { successResponse, serverErrorResponse, validationErrorResponse, unauthorizedResponse, errorResponse } from '@/lib/api/response';
 import { z } from 'zod';
 
 const createPhotoSchema = z.object({
@@ -158,7 +158,7 @@ export async function DELETE(request: NextRequest) {
     const photoId = searchParams.get('id');
 
     if (!photoId) {
-      return serverErrorResponse('Photo ID is required', '', 400);
+      return errorResponse('Photo ID is required', 'BAD_REQUEST', undefined, 400);
     }
 
     const supabase = await createClient();
