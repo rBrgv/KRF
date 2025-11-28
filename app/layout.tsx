@@ -15,15 +15,43 @@ export const metadata: Metadata = {
     description: "Transform your body and mind with personalized training programs from certified experts.",
     type: "website",
     locale: "en_IN",
+    url: "https://krfitnessstudio.com",
+    siteName: "KR Fitness Studio",
+    images: [
+      {
+        url: "https://krfitnessstudio.com/KR%20FITNESS%20LOGO%20BLACK%20BACKGROUND.png",
+        width: 1200,
+        height: 630,
+        alt: "KR Fitness Studio - Personal Training in Bangalore",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "KR Fitness - Personal Fitness Trainer in Bangalore",
     description: "Elite personal training with certified experts. Transform your fitness journey.",
+    images: ["https://krfitnessstudio.com/KR%20FITNESS%20LOGO%20BLACK%20BACKGROUND.png"],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: "https://krfitnessstudio.com",
+    languages: {
+      'en': 'https://krfitnessstudio.com',
+      'hi': 'https://krfitnessstudio.com?lang=hi',
+      'kn': 'https://krfitnessstudio.com?lang=kn',
+      'ta': 'https://krfitnessstudio.com?lang=ta',
+      'te': 'https://krfitnessstudio.com?lang=te',
+    },
   },
 };
 
@@ -35,6 +63,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="preload" href="https://www.youtube.com/iframe_api" as="script" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -75,9 +104,26 @@ export default function RootLayout({
               },
               "sameAs": [
                 "https://www.instagram.com/coach_keerthiraj/",
-                "https://www.facebook.com/people/Coach-Keerthi-Raj/61572878484146/"
+                "https://www.facebook.com/people/Coach-Keerthi-Raj/61572878484146/",
+                "https://www.youtube.com/@KrFitnessStudio"
               ],
-              "priceRange": "$$"
+              "priceRange": "$$",
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "5",
+                "bestRating": "5",
+                "worstRating": "1",
+                "ratingCount": "2394",
+                "reviewCount": "2394"
+              },
+              "areaServed": {
+                "@type": "City",
+                "name": "Bengaluru",
+                "@id": "https://www.wikidata.org/wiki/Q1355"
+              },
+              "hasMap": "https://www.google.com/maps/place/KR+Fitness+Studio",
+              "servesCuisine": null,
+              "menu": null
             }),
           }}
         />
@@ -97,8 +143,27 @@ export default function RootLayout({
               "telephone": "+916361079633",
               "sameAs": [
                 "https://www.instagram.com/coach_keerthiraj/",
-                "https://www.facebook.com/people/Coach-Keerthi-Raj/61572878484146/"
+                "https://www.facebook.com/people/Coach-Keerthi-Raj/61572878484146/",
+                "https://www.youtube.com/@KrFitnessStudio"
               ]
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "AggregateRating",
+              "itemReviewed": {
+                "@type": "LocalBusiness",
+                "name": "KR Fitness Studio"
+              },
+              "ratingValue": "5",
+              "bestRating": "5",
+              "worstRating": "1",
+              "ratingCount": "2394",
+              "reviewCount": "2394"
             }),
           }}
         />

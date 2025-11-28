@@ -43,8 +43,15 @@ export function HeroVideoBackground({ youtubeId, youtubeUrl, segments }: HeroVid
   useEffect(() => {
     if (!videoId || !segments || segments.length === 0) return;
 
-    // Load YouTube IFrame API
+    // Load YouTube IFrame API with preload
     if (!window.YT) {
+      // Preload link for faster loading
+      const preloadLink = document.createElement('link');
+      preloadLink.rel = 'preload';
+      preloadLink.as = 'script';
+      preloadLink.href = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(preloadLink);
+      
       const tag = document.createElement('script');
       tag.src = 'https://www.youtube.com/iframe_api';
       tag.async = true;
@@ -97,7 +104,7 @@ export function HeroVideoBackground({ youtubeId, youtubeUrl, segments }: HeroVid
     };
 
     const onYouTubeIframeAPIReady = () => {
-      // Wait a bit for iframe to be ready
+      // Reduced delay for faster initialization
       setTimeout(() => {
         if (iframeRef.current && !playerRef.current && window.YT && window.YT.Player) {
             try {
@@ -115,13 +122,13 @@ export function HeroVideoBackground({ youtubeId, youtubeUrl, segments }: HeroVid
                   enablejsapi: 1,
                   loop: 0,
                   playlist: videoId, // Required for looping segments
+                  start: segments[0]?.start || 0, // Start at first segment immediately
                 },
                 events: {
                   onReady: (event: any) => {
                     console.log('YouTube player ready');
-                    setTimeout(() => {
-                      playSegment(0);
-                    }, 500);
+                    // Start playing immediately, no delay
+                    playSegment(0);
                   },
                   onStateChange: (event: any) => {
                     // When video ends or reaches end time, play next segment
@@ -142,19 +149,20 @@ export function HeroVideoBackground({ youtubeId, youtubeUrl, segments }: HeroVid
       }, 100);
     };
 
-    // Wait for YouTube API to be ready
+    // Wait for YouTube API to be ready - check more frequently
     let checkAPI: NodeJS.Timeout | null = null;
     
     const initPlayer = () => {
       if (window.YT && window.YT.Player && iframeRef.current && !playerRef.current) {
         onYouTubeIframeAPIReady();
       } else if (!window.YT) {
+        // Check more frequently (50ms instead of 100ms) for faster detection
         checkAPI = setInterval(() => {
           if (window.YT && window.YT.Player) {
             if (checkAPI) clearInterval(checkAPI);
             onYouTubeIframeAPIReady();
           }
-        }, 100);
+        }, 50);
       }
     };
 

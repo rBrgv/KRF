@@ -84,8 +84,124 @@ export default async function ServiceDetailPage({
     notFound();
   }
 
+  const serviceUrl = `https://krfitnessstudio.com/services/${slug}`;
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": `What is included in the ${service.title}?`,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": service.details.join(", ")
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How long does the program take?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Program duration varies based on your goals and progress. We'll create a personalized timeline during your initial consultation."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need any equipment?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Equipment requirements depend on the program. Some programs can be done at home with minimal equipment, while others utilize our fully equipped studio."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What certifications do your trainers have?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our lead trainer is certified with EREPS Level 4, MDUK LEVEL 1, SKILL INDIA, NSCA, FUNCTIONAL TRAINING FSSA, INFS, and THAI BODY WORKS."
+        }
+      }
+    ]
+  };
+
   return (
     <div className="container mx-auto px-4 py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "serviceType": "Fitness Training",
+            "name": service.title,
+            "description": service.description,
+            "provider": {
+              "@type": "LocalBusiness",
+              "name": "KR Fitness Studio",
+              "url": "https://krfitnessstudio.com",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Shiv krupa complex No.133 4th cross, Uttarahalli Hobli",
+                "addressLocality": "Bengaluru",
+                "addressRegion": "Karnataka",
+                "postalCode": "560061",
+                "addressCountry": "IN"
+              }
+            },
+            "areaServed": {
+              "@type": "City",
+              "name": "Bengaluru"
+            },
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": service.title,
+              "itemListElement": service.details.map((detail, index) => ({
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": detail
+                }
+              }))
+            }
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://krfitnessstudio.com"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Services",
+                "item": "https://krfitnessstudio.com/services"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": service.title,
+                "item": serviceUrl
+              }
+            ]
+          }),
+        }}
+      />
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div>

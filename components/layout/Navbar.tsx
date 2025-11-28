@@ -3,18 +3,21 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { LanguageSelector } from "@/components/LanguageSelector";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 
 export function Navbar() {
   const [imgError, setImgError] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { t } = useTranslation();
 
   const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/about", label: "About" },
-    { href: "/services", label: "Services" },
-    { href: "/transformations", label: "Transformations" },
-    { href: "/events", label: "Events" },
-    { href: "/contact", label: "Contact" },
+    { href: "/", label: t("nav.home") },
+    { href: "/about", label: t("nav.about") },
+    { href: "/services", label: t("nav.services") },
+    { href: "/transformations", label: t("nav.transformations") },
+    { href: "/events", label: t("nav.events") },
+    { href: "/contact", label: t("nav.contact") },
   ];
 
   return (
@@ -50,16 +53,10 @@ export function Navbar() {
             href="/auth/login"
             className="text-sm font-medium text-gray-300 hover:text-red-400 transition-all duration-200 relative group"
           >
-            Login
+            {t("nav.login")}
             <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-500 group-hover:w-full transition-all duration-200"></span>
           </Link>
-          <Link
-            href="/book"
-            className="group relative rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-2.5 text-sm font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-300 overflow-hidden shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:shadow-[0_0_40px_rgba(220,38,38,0.5)] hover:scale-105"
-          >
-            <span className="relative z-10">Book Consultation</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          </Link>
+          <LanguageSelector />
         </div>
 
         {/* Mobile Menu Button */}
@@ -92,15 +89,11 @@ export function Navbar() {
               onClick={() => setMobileMenuOpen(false)}
               className="block text-base font-medium text-gray-300 hover:text-red-400 transition-colors py-2"
             >
-              Login
+              {t("nav.login")}
             </Link>
-            <Link
-              href="/book"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block w-full text-center rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 text-sm font-semibold hover:from-red-700 hover:to-red-800 transition-all mt-4"
-            >
-              Book Consultation
-            </Link>
+            <div className="pt-2 border-t border-gray-800/50">
+              <LanguageSelector />
+            </div>
           </div>
         </div>
       )}

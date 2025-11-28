@@ -31,7 +31,7 @@ export function BackToTop() {
   return (
     <button
       onClick={scrollToTop}
-      className="fixed bottom-24 right-6 z-50 p-3 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white shadow-[0_4px_20px_rgba(220,38,38,0.4)] hover:from-red-700 hover:to-red-800 transition-all duration-300 hover:scale-110 group"
+      className="fixed bottom-40 md:bottom-24 left-6 md:left-auto md:right-6 z-40 p-3 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white shadow-[0_4px_20px_rgba(220,38,38,0.4)] hover:from-red-700 hover:to-red-800 transition-all duration-300 hover:scale-110 group"
       aria-label="Back to top"
     >
       <ArrowUp className="w-5 h-5 transform group-hover:-translate-y-1 transition-transform" />

@@ -7,6 +7,7 @@ import { TestimonialCarousel } from "@/components/TestimonialCarousel";
 import { TransformationGallery } from "@/components/TransformationGallery";
 import { AboutStudioSection } from "@/components/AboutStudioSection";
 import { HeroVideoBackground } from "@/components/HeroVideoBackground";
+import { HeroSection } from "@/components/HeroSection";
 
 export const metadata: Metadata = {
   title: "KR Fitness - Personal Fitness Trainer in Bangalore | Transform Your Body",
@@ -50,34 +51,7 @@ export default function HomePage() {
         
         <div className="container mx-auto max-w-6xl relative" style={{ zIndex: 10 }}>
           <div className="text-center max-w-5xl mx-auto">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-8 leading-tight tracking-tight">
-              Elite Personal Training.
-              <br />
-              <span className="bg-gradient-to-r from-red-500 via-red-600 to-red-500 bg-clip-text text-transparent">
-                One Client. One Coach.
-              </span>
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-300 mb-4 font-light max-w-2xl mx-auto">
-              Push past limits with personalized training designed just for you
-            </p>
-            <p className="text-lg text-gray-400 mb-12 max-w-xl mx-auto">
-              Fitness is not a destination; it's a way of life - start at the gym
-            </p>
-            <div className="flex flex-wrap justify-center gap-4 mb-16">
-              <Link
-                href="/book"
-                className="group relative inline-flex items-center justify-center rounded-full bg-gradient-to-r from-red-600 to-red-700 px-10 py-4 text-base font-semibold text-white overflow-hidden transition-all duration-300 hover:scale-105 premium-glow"
-              >
-                <span className="relative z-10">Book Your Spot Now At Rs. 99 only</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              </Link>
-              <Link
-                href="/transformations"
-                className="inline-flex items-center justify-center rounded-full border-2 border-gray-700 px-10 py-4 text-base font-semibold text-gray-200 hover:border-red-500/50 hover:text-red-400 transition-all duration-300 hover:bg-red-500/5 backdrop-blur-sm"
-              >
-                View Transformations
-              </Link>
-            </div>
+            <HeroSection />
           </div>
         </div>
       </section>
