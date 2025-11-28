@@ -30,9 +30,10 @@ export async function PATCH(
     const validatedData = eventUpdateSchema.parse(body);
 
     // Remove image_url if it's null or empty (column might not exist in database)
-    const updateData = { ...validatedData };
-    if (updateData.image_url === null || updateData.image_url === undefined || updateData.image_url === '') {
-      delete updateData.image_url;
+    const { image_url, ...restData } = validatedData;
+    const updateData: Record<string, any> = { ...restData };
+    if (image_url !== null && image_url !== undefined && image_url !== '') {
+      updateData.image_url = image_url;
     }
 
     console.log('[Event Update API] Updating event with data:', JSON.stringify(updateData, null, 2));
