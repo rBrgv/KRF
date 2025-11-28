@@ -96,9 +96,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Remove image_url if it's null (column might not exist in database)
-    const insertData = { ...validatedData };
-    if (insertData.image_url === null || insertData.image_url === undefined || insertData.image_url === '') {
-      delete insertData.image_url;
+    const { image_url, ...restData } = validatedData;
+    const insertData: Record<string, any> = { ...restData };
+    if (image_url !== null && image_url !== undefined && image_url !== '') {
+      insertData.image_url = image_url;
     }
 
     console.log('[Event API] Inserting data (image_url removed if null):', JSON.stringify(insertData, null, 2));
