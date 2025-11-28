@@ -27,7 +27,7 @@ export async function generatePDFReport(
   });
   
   // Set default font encoding to handle special characters properly
-  doc.setLanguage('en-US');
+  // Note: setLanguage is not available in this version of jsPDF, skipping
 
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
