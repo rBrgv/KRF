@@ -35,10 +35,10 @@ export async function generatePDFReport(
   let yPos = margin;
 
   // Colors
-  const primaryColor = [220, 38, 38]; // Red-600
-  const darkGray = [31, 41, 55]; // Gray-800
-  const lightGray = [156, 163, 175]; // Gray-400
-  const textColor = [255, 255, 255]; // White
+  const primaryColor: [number, number, number] = [220, 38, 38]; // Red-600
+  const darkGray: [number, number, number] = [31, 41, 55]; // Gray-800
+  const lightGray: [number, number, number] = [156, 163, 175]; // Gray-400
+  const textColor: [number, number, number] = [255, 255, 255]; // White
 
   // Helper function to add logo and return the new yPos
   const addLogo = async (): Promise<number> => {
