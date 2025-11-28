@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Disallow admin/dashboard pages
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://krfitnessstudio.com/sitemap.xml
+

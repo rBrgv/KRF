@@ -5,46 +5,62 @@ import { Check } from "lucide-react";
 
 const plans = [
   {
-    name: "Silver Program",
-    price: "Custom",
-    description: "Online customized training program designed for those who want to improve their running or walking posture and strength",
+    name: "11-Day Genetic Activation Challenge",
+    price: "Free",
+    description: "A simple, science-based starter program built on epigenetic activation. Unlock better energy, discipline, and mindset in just 11 days.",
     features: [
-      "Online customized training program",
-      "Improve running or walking posture",
-      "Strength training focus",
-      "Home/apartment gym friendly",
-      "Weights & resistance band workouts",
+      "15-minute daily routine",
+      "Movement + breathwork + planning",
+      "Identity-building affirmations",
+      "Action templates from the challenge",
+      "Beginner-friendly and zero equipment",
+      "Based on Coach Keerthi's mindset system",
     ],
     popular: false,
     cta: "Learn More",
+    link: "/contact",
   },
   {
-    name: "Gold Program",
-    price: "Custom",
-    description: "Small group training for fun and motivation",
+    name: "4-Week Online Transformation Program",
+    price: "₹999",
+    priceNote: "One-time Payment",
+    originalPrice: "₹12,000+",
+    bonusValue: "₹7,600+",
+    description: "Perfect for busy professionals who want structure, accountability, and real fat loss results without needing a gym.",
     features: [
-      "Small group (2-3 like-minded individuals)",
-      "Fun and motivating atmosphere",
-      "Work out in our studio",
-      "Group dynamics",
-      "Shared motivation",
+      "Choose Any 4 Modules:",
+      "• Nutrition: Simple guide for fat loss",
+      "• DeskFit: 5-minute office workouts",
+      "• Shift: Mindset identity upgrade",
+      "• Code: 6–8 week fat-loss blueprint",
+      "• TrackPro: Daily habit tracker",
+      "• Access: Priority WhatsApp support",
+      "• GymReady: Machine-confidence guide",
+      "• Flex: Mobility routines",
+      "• Origin: Keerthi's transformation secrets",
     ],
+    guarantee: "7-day satisfaction guarantee. Try it risk-free.",
     popular: true,
-    cta: "Learn More",
+    cta: "Start Your 4-Week Program",
+    link: "/contact",
   },
   {
-    name: "Platinum Program",
-    price: "Custom",
-    description: "Perfect for those who prefer to workout alone at their own pace",
+    name: "KR Fitness 3-Month Remote Coaching",
+    price: "₹5,899",
+    priceNote: "Complete Coaching Package",
+    description: "A full coaching system for those who want professional guidance, structure, and accountability — from anywhere.",
     features: [
-      "One-on-one personal training",
-      "Workout alone at your own pace",
-      "Flexible scheduling",
-      "Customized workout plan",
-      "Full studio access",
+      "Initial Assessment (60 min)",
+      "Personalised 12-Week Training Program",
+      "Monthly 1:1 Consultations (3 calls)",
+      "Weekly Check-ins",
+      "Resource Pack",
+      "Community Access (optional)",
+      "Bonus: Printable progress tracker + workout cards",
     ],
     popular: false,
-    cta: "Learn More",
+    cta: "Enroll in Remote Coaching",
+    link: "/contact",
   },
 ];
 
@@ -55,13 +71,13 @@ export function PricingSection() {
       <div className="container mx-auto max-w-7xl relative z-10">
         <div className="text-center mb-16">
           <span className="inline-block px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-xs font-semibold uppercase tracking-wider text-red-400 mb-4">
-            Pricing
+            Transformation Path
           </span>
           <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6">
-            Choose Your Program
+            Choose Your Transformation Path
           </h2>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            Flexible membership plans designed to fit your schedule and goals. Contact us for personalized pricing.
+            Flexible programs for every lifestyle — online, remote, or hybrid.
           </p>
         </div>
 
@@ -80,10 +96,21 @@ export function PricingSection() {
               )}
               <div className="text-center mb-6">
                 <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
-                <div className="text-4xl font-extrabold bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent mb-2">
-                  {plan.price}
+                <div className="mb-2">
+                  <div className="text-4xl font-extrabold bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent">
+                    {plan.price}
+                  </div>
+                  {plan.priceNote && (
+                    <div className="text-sm text-gray-400 mt-1">{plan.priceNote}</div>
+                  )}
+                  {plan.originalPrice && (
+                    <div className="text-sm text-gray-500 line-through mt-1">{plan.originalPrice}</div>
+                  )}
+                  {plan.bonusValue && (
+                    <div className="text-sm text-green-400 mt-1">Bonus Value: {plan.bonusValue}</div>
+                  )}
                 </div>
-                <p className="text-gray-400 text-sm">{plan.description}</p>
+                <p className="text-gray-400 text-sm leading-relaxed">{plan.description}</p>
               </div>
               <ul className="space-y-3 mb-8">
                 {plan.features.map((feature, idx) => (
@@ -95,8 +122,13 @@ export function PricingSection() {
                   </li>
                 ))}
               </ul>
+              {plan.guarantee && (
+                <div className="mb-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
+                  <p className="text-sm text-green-400 font-medium">{plan.guarantee}</p>
+                </div>
+              )}
               <Link
-                href="/contact"
+                href={plan.link || "/contact"}
                 className="block w-full text-center rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 text-sm font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-300 shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:shadow-[0_0_30px_rgba(220,38,38,0.4)]"
               >
                 {plan.cta}

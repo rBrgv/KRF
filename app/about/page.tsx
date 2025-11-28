@@ -10,8 +10,57 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+  const playlistId = "PL9HYtTMWoRPIVqpx3WlmMKAW4-Ae8XpcC";
+  const playlistUrl = `https://www.youtube.com/playlist?list=${playlistId}`;
+
   return (
     <div className="min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "VideoObject",
+            "name": "KR Fitness Podcast Series",
+            "description": "Explore insightful conversations, fitness tips, and transformation stories through our podcast series. Learn from real experiences and expert insights on health, fitness, and personal transformation.",
+            "thumbnailUrl": "https://krfitnessstudio.com/KR%20FITNESS%20LOGO%20BLACK%20BACKGROUND.png",
+            "uploadDate": "2024-01-01",
+            "contentUrl": playlistUrl,
+            "embedUrl": `https://www.youtube.com/embed/videoseries?list=${playlistId}`,
+            "publisher": {
+              "@type": "Organization",
+              "name": "KR Fitness Studio",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://krfitnessstudio.com/KR%20FITNESS%20LOGO%20BLACK%20BACKGROUND.png"
+              }
+            }
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://krfitnessstudio.com"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "About",
+                "item": "https://krfitnessstudio.com/about"
+              }
+            ]
+          }),
+        }}
+      />
       {/* Hero Section with Images */}
       <section className="relative py-20 px-4 bg-gray-950">
         <div className="container mx-auto max-w-7xl">

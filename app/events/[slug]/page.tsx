@@ -42,8 +42,87 @@ export default async function EventDetailPage({
       ? Math.max(0, event.max_capacity - registrationCount)
       : null;
 
+  const eventUrl = `https://krfitnessstudio.com/events/${slug}`;
+  const eventImage = event.image_url || 'https://krfitnessstudio.com/KR%20FITNESS%20LOGO%20BLACK%20BACKGROUND.png';
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Event",
+            "name": event.title,
+            "description": event.description || `${event.title} at KR Fitness Studio`,
+            "image": eventImage,
+            "url": eventUrl,
+            "startDate": event.start_datetime,
+            "endDate": event.end_datetime || event.start_datetime,
+            "eventStatus": "https://schema.org/EventScheduled",
+            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+            "location": {
+              "@type": "Place",
+              "name": event.location || "KR Fitness Studio",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Shiv krupa complex No.133 4th cross, Uttarahalli Hobli",
+                "addressLocality": "Bengaluru",
+                "addressRegion": "Karnataka",
+                "postalCode": "560061",
+                "addressCountry": "IN"
+              }
+            },
+            "organizer": {
+              "@type": "Organization",
+              "name": "KR Fitness Studio",
+              "url": "https://krfitnessstudio.com"
+            },
+            "offers": {
+              "@type": "Offer",
+              "url": eventUrl,
+              "price": event.price_in_inr > 0 ? event.price_in_inr.toString() : "0",
+              "priceCurrency": "INR",
+              "availability": event.max_capacity && remainingSeats === 0 
+                ? "https://schema.org/SoldOut" 
+                : "https://schema.org/InStock",
+              "validFrom": new Date().toISOString()
+            },
+            ...(event.max_capacity && {
+              "maximumAttendeeCapacity": event.max_capacity
+            })
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://krfitnessstudio.com"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Events",
+                "item": "https://krfitnessstudio.com/events"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": event.title,
+                "item": eventUrl
+              }
+            ]
+          }),
+        }}
+      />
       <div className="container mx-auto px-4 py-20">
         <div className="max-w-5xl mx-auto">
           {/* Back Button */}

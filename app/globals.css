@@ -77,6 +77,14 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Snap scrolling for about-coach page on mobile */
+@media (max-width: 768px) {
+  .snap-start {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+}
+
 /* Hide scrollbar for thumbnail strip */
 .scrollbar-hide {
   -ms-overflow-style: none;
