@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
       if (errorMessage.includes('new row violates row-level security') || 
           errorMessage.includes('permission denied') ||
           errorMessage.includes('RLS')) {
-        return serverErrorResponse(
+        return errorResponse(
           'Permission denied',
           'FORBIDDEN',
           'You do not have permission to upload photos. Please check your storage policies. Make sure the "Clients can upload own photos" policy is active.',
