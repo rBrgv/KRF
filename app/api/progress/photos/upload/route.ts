@@ -88,6 +88,7 @@ export async function POST(request: NextRequest) {
           errorMessage.includes('RLS')) {
         return serverErrorResponse(
           'Permission denied',
+          'FORBIDDEN',
           'You do not have permission to upload photos. Please check your storage policies. Make sure the "Clients can upload own photos" policy is active.',
           403
         );
@@ -95,8 +96,9 @@ export async function POST(request: NextRequest) {
       
       if (errorMessage.includes('Bucket not found') || 
           errorMessage.includes('does not exist')) {
-        return serverErrorResponse(
+        return errorResponse(
           'Storage bucket not found',
+          'NOT_FOUND',
           'The "progress-photos" bucket does not exist or is not accessible. Please create it in Supabase Dashboard → Storage and ensure it is set to Public.',
           404
         );
