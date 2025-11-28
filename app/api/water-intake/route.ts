@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { requireAuth, getPaginationParams } from '@/lib/api/auth';
-import { successResponse, serverErrorResponse, validationErrorResponse, unauthorizedResponse } from '@/lib/api/response';
+import { successResponse, serverErrorResponse, validationErrorResponse, unauthorizedResponse, errorResponse } from '@/lib/api/response';
 import { z } from 'zod';
 
 const createWaterIntakeSchema = z.object({
