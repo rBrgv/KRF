@@ -1,0 +1,36 @@
+{
+  "extraction_date": "2025-10-21 20:38:16",
+  "sites": {
+    "coach": {
+      "title": "krfitnessstudio",
+      "images": 24,
+      "paragraphs": 12,
+      "headings": 51,
+      "contact_info": {
+        "emails": [
+          "krpersonalfitnessstudio@gmail.com"
+        ],
+        "phones": [
+          "6361079633"
+        ]
+      },
+      "social_media": {
+        "instagram": [
+          "https://www.instagram.com/coach_keerthiraj/"
+        ],
+        "facebook": [
+          "https://www.facebook.com/people/Coach-Keerthi-Raj/61572878484146/"
+        ],
+        "youtube": [],
+        "whatsapp": []
+      }
+    }
+  },
+  "recommendations": [
+    "Review extracted content for accuracy",
+    "Organize images by category (coach, studio, testimonials)",
+    "Consolidate duplicate contact information",
+    "Create consistent brand voice across both sites",
+    "Update SEO meta descriptions for new site"
+  ]
+}

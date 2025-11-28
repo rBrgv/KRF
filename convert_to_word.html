@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>KR Fitness - Client Testing Guide</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.6; }
+        h1 { color: #dc2626; border-bottom: 3px solid #dc2626; padding-bottom: 10px; }
+        h2 { color: #991b1b; margin-top: 30px; }
+        h3 { color: #7f1d1d; margin-top: 20px; }
+        code { background: #f3f4f6; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f3f4f6; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        ul, ol { margin-left: 20px; }
+        li { margin-bottom: 8px; }
+        strong { color: #374151; }
+        .section { margin-bottom: 40px; }
+    </style>
+</head>
+<body>
+<h1>KR Fitness Website - Client Testing & Customization Guide
+
+<h2>Document Purpose
+This guide helps you understand every page and feature of your website, what to expect, why it's designed this way, and what might need customization based on your real-world business needs.
+
+---
+
+<h2>📱 PUBLIC WEBSITE PAGES
+
+<h3>1. HOME PAGE (`/`)
+<strong>Purpose:</strong> Main landing page that introduces your fitness studio and converts visitors into leads.
+
+<h4>Sections (in order):
+
+<strong>A. Hero Section (Top)</strong>
+<li>**What it shows:** Large video background with main headline "Elite Personal Training. One Client. One Coach."
+<li>**Why:** Creates immediate visual impact and establishes your premium positioning
+<li>**Customization needed:**
+  - Video URL: Currently uses YouTube video `pQTgr2rk9oc` - replace with your own promotional video
+  - Headline text: Update if your messaging changes
+  - CTA button: "Book Your Spot Now At Rs. 99 only" - Update pricing if this changes
+  - Secondary button: "View Transformations" - Keep or modify
+
+<strong>B. Stats Section</strong>
+<li>**What it shows:** 4 key statistics:
+  - "15+ Years of Excellence"
+  - "500+ Successful Transformations"
+  - "100% Personalized Programs"
+  - "EREPS Level 4 Certified"
+<li>**Why:** Builds credibility and trust quickly
+<li>**Customization needed:**
+  - Update numbers to match your actual statistics
+  - Modify labels if your certifications or achievements differ
+
+<strong>C. Why Hire Personal Fitness Trainers Section</strong>
+<li>**What it shows:** 5 benefits of hiring a personal trainer
+<li>**Why:** Addresses common objections and educates visitors
+<li>**Customization needed:**
+  - Review each benefit point - ensure they match your actual services
+  - Update descriptions if your approach differs
+
+<strong>D. Benefits Section</strong>
+<li>**What it shows:** 6 key benefits in a grid layout
+<li>**Why:** Highlights what clients get from your service
+<li>**Customization needed:**
+  - Verify each benefit is accurate for your business
+  - Update icons/descriptions if needed
+
+<strong>E. How It Works Section</strong>
+<li>**What it shows:** 4-step process (Consultation → Custom Plan → Train → Transform)
+<li>**Why:** Simplifies the journey and sets expectations
+<li>**Customization needed:**
+  - Ensure steps match your actual process
+  - Update descriptions if your workflow differs
+
+<strong>F. Philosophy Section</strong>
+<li>**What it shows:** "Fitness is not a destination; it's a way of life" messaging
+<li>**Why:** Establishes your brand philosophy
+<li>**Customization needed:**
+  - Update text to match your actual philosophy
+  - Modify if your messaging changes
+
+<strong>G. Certifications Section</strong>
+<li>**What it shows:** Your certifications (EREPS Level 4, MDUK LEVEL 1, SKILL INDIA, etc.)
+<li>**Why:** Builds authority and trust
+<li>**Customization needed:**
+  - Update with your actual certifications
+  - Add/remove certifications as needed
+
+<strong>H. Published Author Section</strong>
+<li>**What it shows:** Book cover and description of "I CAN GET TRANSFORMED: 9 Stories of Unbelievable Transformation"
+<li>**Why:** Showcases your expertise and credibility
+<li>**Customization needed:**
+  - Update book image if you have a new cover
+  - Update purchase links (Flipkart, Amazon) if URLs change
+  - Remove this section if book is no longer relevant
+
+<strong>I. Reviews Section</strong>
+<li>**What it shows:** Google Reviews integration
+<li>**Why:** Social proof from real clients
+<li>**Customization needed:**
+  - Ensure Google Reviews API is configured
+  - Update if you want to show reviews from other platforms
+
+<strong>J. Testimonial Carousel</strong>
+<li>**What it shows:** Rotating client testimonials
+<li>**Why:** Social proof and credibility
+<li>**Customization needed:**
+  - Update testimonials with real client quotes
+  - Add photos if available
+  - Ensure testimonials are current and accurate
+
+<strong>K. Transformation Gallery</strong>
+<li>**What it shows:** Before/after photos of client transformations
+<li>**Why:** Visual proof of results
+<li>**Customization needed:**
+  - Add your actual transformation photos
+  - Update client names (with permission)
+  - Ensure photos are high quality
+
+<strong>L. Our Approach Section</strong>
+<li>**What it shows:** Your training methodology
+<li>**Why:** Explains your unique approach
+<li>**Customization needed:**
+  - Update to match your actual training methods
+  - Modify if your approach evolves
+
+<strong>M. Pricing Section</strong>
+<li>**What it shows:** Your pricing plans and packages
+<li>**Why:** Transparency builds trust
+<li>**Customization needed:**
+  - Update pricing to match current rates
+  - Modify packages if offerings change
+  - Ensure pricing is accurate and up-to-date
+
+<strong>N. FAQ Section</strong>
+<li>**What it shows:** Frequently asked questions
+<li>**Why:** Addresses common concerns
+<li>**Customization needed:**
+  - Update questions based on what clients actually ask
+  - Modify answers to match your policies
+  - Add new questions as they arise
+
+<strong>O. Blog Preview</strong>
+<li>**What it shows:** Latest blog posts preview
+<li>**Why:** Establishes thought leadership
+<li>**Customization needed:**
+  - Update with actual blog posts
+  - Ensure blog functionality is working
+  - Remove if you don't plan to blog
+
+<strong>P. About Studio Section</strong>
+<li>**What it shows:** Information about your studio
+<li>**Why:** Gives context about your physical space
+<li>**Customization needed:**
+  - Update with actual studio details
+  - Add photos of your studio
+  - Update location/amenities information
+
+<strong>Q. Final CTA Section</strong>
+<li>**What it shows:** Final call-to-action to book or view transformations
+<li>**Why:** Last chance to convert visitors
+<li>**Customization needed:**
+  - Update CTA text if needed
+  - Ensure links work correctly
+
+---
+
+<h3>2. ABOUT PAGE (`/about`)
+<strong>Purpose:</strong> Tells your story, credentials, and builds personal connection.
+
+<h4>What to Check:
+<li>Trainer bio and background
+<li>Certifications displayed
+<li>Book showcase (if applicable)
+<li>YouTube playlist/podcast links
+<li>Purchase links for book
+
+<h4>Customization Needed:
+<li>Update bio with current information
+<li>Add recent achievements
+<li>Update certification dates
+<li>Verify all links work (YouTube, book purchase links)
+<li>Add recent photos
+
+---
+
+<h3>3. SERVICES PAGE (`/services`)
+<strong>Purpose:</strong> Details all services and programs offered.
+
+<h4>What to Check:
+<li>All services listed
+<li>Service descriptions accurate
+<li>Pricing information
+<li>Links to booking/contact
+
+<h4>Customization Needed:
+<li>Update service offerings if you add/remove services
+<li>Modify pricing if rates change
+<li>Update descriptions to match current programs
+<li>Add new services as you launch them
+
+---
+
+<h3>4. TRANSFORMATIONS PAGE (`/transformations`)
+<strong>Purpose:</strong> Showcases client success stories with before/after photos.
+
+<h4>What to Check:
+<li>Photos display correctly
+<li>Client names (with permission)
+<li>Results/stats shown
+<li>Navigation works
+
+<h4>Customization Needed:
+<li>Add new transformation photos regularly
+<li>Update client testimonials
+<li>Ensure you have permission to use photos
+<li>Add dates/timelines if relevant
+
+---
+
+<h3>5. EVENTS PAGE (`/events`)
+<strong>Purpose:</strong> Lists upcoming fitness events, workshops, and special sessions.
+
+<h4>What to Check:
+<li>Events display correctly
+<li>Registration form works
+<li>Payment integration (Razorpay) functions
+<li>Event details are accurate
+
+<h4>Customization Needed:
+<li>Create events through dashboard
+<li>Update event descriptions
+<li>Set correct pricing
+<li>Configure max capacity
+<li>Test registration flow end-to-end
+<li>Verify payment gateway works
+
+<strong>Important:</strong> Events must be marked as "Active" and have a future start date to appear on this page.
+
+---
+
+<h3>6. BLOG PAGE (`/blog`)
+<strong>Purpose:</strong> Fitness tips, nutrition advice, and thought leadership content.
+
+<h4>What to Check:
+<li>Blog posts display
+<li>Reading experience
+<li>Navigation between posts
+
+<h4>Customization Needed:
+<li>Create blog posts (currently needs to be done manually in database)
+<li>Update content regularly
+<li>Add categories/tags
+<li>Ensure SEO optimization
+
+<strong>Note:</strong> Blog post management interface may need to be added to dashboard.
+
+---
+
+<h3>7. CONTACT PAGE (`/contact`)
+<strong>Purpose:</strong> Allows visitors to reach out and ask questions.
+
+<h4>What to Check:
+<li>Contact form submits successfully
+<li>Form creates leads in dashboard
+<li>Contact information displayed correctly
+<li>Map/location shows correctly (if applicable)
+
+<h4>Customization Needed:
+<li>Update contact information (phone, email, address)
+<li>Verify form sends notifications
+<li>Update business hours
+<li>Add social media links if missing
+
+---
+
+<h3>8. BOOK CONSULTATION PAGE (`/book` or `/book-consultation`)
+<strong>Purpose:</strong> Captures leads who want to book a consultation.
+
+<h4>What to Check:
+<li>Form submits successfully
+<li>Creates lead in dashboard
+<li>UTM tracking works (for marketing campaigns)
+<li>Confirmation message displays
+
+<h4>Customization Needed:
+<li>Update form fields if needed
+<li>Modify confirmation message
+<li>Ensure leads are being captured correctly
+<li>Test with different UTM parameters
+
+---
+
+<h3>9. HEALTH CHECK PAGE (`/health-check`)
+<strong>Purpose:</strong> Health assessment tool that creates leads and generates PDF reports.
+
+<h4>What to Check:
+<li>All questions display correctly
+<li>Scoring works accurately
+<li>PDF report generates and downloads
+<li>Lead is created after submission
+<li>Report looks professional
+
+<h4>Customization Needed:
+<li>Review questions for accuracy
+<li>Update scoring logic if needed
+<li>Customize PDF report branding
+<li>Ensure recommendations are relevant
+<li>Test on mobile devices
+
+---
+
+<h3>10. EVENT DETAIL PAGE (`/events/[slug]`)
+<strong>Purpose:</strong> Individual event page with registration form.
+
+<h4>What to Check:
+<li>Event details display correctly
+<li>Registration form works
+<li>Payment integration functions
+<li>Availability count is accurate
+<li>Success/failure pages work
+
+<h4>Customization Needed:
+<li>Ensure event images load
+<li>Test registration with different payment methods
+<li>Verify email confirmations send
+<li>Check that registrations appear in dashboard
+
+---
+
+<h2>🔐 AUTHENTICATION PAGES
+
+<h3>11. LOGIN PAGE (`/auth/login`)
+<strong>Purpose:</strong> Trainer/admin login to access dashboard.
+
+<h4>What to Check:
+<li>Login works with correct credentials
+<li>Error messages display for wrong credentials
+<li>Redirects to dashboard after login
+<li>"Forgot password" works (if implemented)
+
+<h4>Customization Needed:
+<li>Update branding if needed
+<li>Add password reset functionality if missing
+<li>Ensure security best practices
+
+---
+
+<h2>🎛️ TRAINER/ADMIN DASHBOARD
+
+<h3>12. DASHBOARD OVERVIEW (`/dashboard`)
+<strong>Purpose:</strong> Main dashboard showing key metrics and quick overview.
+
+<h4>What it Shows:
+<li>**KPI Cards:**
+  - Total Leads
+  - Conversions This Month
+  - Today's Appointments
+  - Upcoming Events
+<li>**Today's Appointments:** List of appointments scheduled for today
+<li>**Upcoming Events:** Next 5 events with registration counts
+
+<h4>Customization Needed:
+<li>Review KPI calculations for accuracy
+<li>Ensure appointment times are correct
+<li>Verify event registration counts
+<li>Update date ranges if needed
+
+---
+
+<h3>13. LEADS MANAGEMENT (`/dashboard/leads`)
+<strong>Purpose:</strong> Manage all leads from website forms, consultations, etc.
+
+<h4>Features:
+<li>**Lead List:** All leads with filters (status, source, date)
+<li>**Lead Details:** Full information, notes, UTM tracking data
+<li>**Status Management:** New → Contacted → Qualified → Converted → Not Interested
+<li>**Convert to Client:** One-click conversion
+<li>**Email Integration:** Send emails to leads
+<li>**WhatsApp Integration:** Send WhatsApp messages
+<li>**AI Features:**
+  - Lead summarization
+  - Reply helper for emails/WhatsApp
+
+<h4>What to Check:
+<li>Leads appear after form submissions
+<li>Status updates work
+<li>Email sending functions
+<li>WhatsApp integration works
+<li>AI features provide helpful suggestions
+<li>UTM tracking data is captured
+
+<h4>Customization Needed:
+<li>Review lead status workflow
+<li>Customize email templates
+<li>Update WhatsApp message templates
+<li>Configure AI prompts if needed
+<li>Add custom fields if required
+
+---
+
+<h3>14. CLIENTS MANAGEMENT (`/dashboard/clients`)
+<strong>Purpose:</strong> Manage active clients and their complete profiles.
+
+<h4>Features:
+<li>**Client List:** Searchable list of all clients
+<li>**Client Detail Page:**
+  - Personal information
+  - Appointments
+  - Workout plans assigned
+  - Meal plans assigned
+  - Progress tracking (photos, measurements)
+  - Attendance logs
+  - Goals and achievements
+  - WhatsApp conversation history
+  - Notes and history
+
+<h4>What to Check:
+<li>Client information displays correctly
+<li>Appointments link properly
+<li>Workout/meal plans show correctly
+<li>Progress photos upload and display
+<li>Attendance tracking works
+<li>WhatsApp messages sync
+
+<h4>Customization Needed:
+<li>Add custom client fields if needed
+<li>Update progress tracking metrics
+<li>Configure attendance policies
+<li>Customize goal types
+<li>Update WhatsApp integration settings
+
+---
+
+<h3>15. APPOINTMENTS (`/dashboard/appointments`)
+<strong>Purpose:</strong> Schedule and manage client appointments.
+
+<h4>Features:
+<li>**Appointment List:** All appointments with filters
+<li>**Create Appointment:** Schedule new appointments
+<li>**Edit Appointment:** Modify existing appointments
+<li>**Appointment Details:** Full appointment information
+
+<h4>What to Check:
+<li>Appointments create successfully
+<li>Calendar view works (if implemented)
+<li>Notifications send (if configured)
+<li>Recurring appointments work
+<li>Client linking works
+
+<h4>Customization Needed:
+<li>Set business hours
+<li>Configure appointment types
+<li>Set up notification preferences
+<li>Update cancellation policies
+<li>Configure reminder settings
+
+---
+
+<h3>16. EVENTS MANAGEMENT (`/dashboard/events`)
+<strong>Purpose:</strong> Create and manage fitness events, workshops, etc.
+
+<h4>Features:
+<li>**Event List:** All events (active and inactive)
+<li>**Create Event:** Add new events
+<li>**Edit Event:** Modify event details
+<li>**Event Details:**
+  - Event information
+  - Registration list
+  - Export registrations to CSV
+  - Mark payments offline
+  - Registration count
+
+<h4>What to Check:
+<li>Events create successfully
+<li>Images upload correctly
+<li>Registration form works on public page
+<li>Payment integration functions
+<li>Registrations appear in list
+<li>CSV export works
+<li>Availability count is accurate
+
+<h4>Customization Needed:
+<li>Update event categories/types
+<li>Configure payment gateways
+<li>Set up email confirmations
+<li>Customize registration fields
+<li>Update cancellation/refund policies
+
+---
+
+<h3>17. WORKOUTS (`/dashboard/workouts`)
+<strong>Purpose:</strong> Create and manage workout plans for clients.
+
+<h4>Features:
+<li>**Workout Plans:** Library of workout plans
+<li>**Create Plan:** Build custom workout plans
+<li>**Assign to Clients:** Assign plans to specific clients
+<li>**Exercise Library:** Database of exercises
+<li>**Client Progress:** Track workout completion
+
+<h4>What to Check:
+<li>Workout plans create successfully
+<li>Exercises display correctly
+<li>Client assignments work
+<li>Progress tracking functions
+<li>Completion logs record
+
+<h4>Customization Needed:
+<li>Add exercises to library
+<li>Update exercise categories
+<li>Customize workout plan templates
+<li>Configure progress metrics
+<li>Update exercise descriptions/demos
+
+---
+
+<h3>18. NUTRITION (`/dashboard/nutrition`)
+<strong>Purpose:</strong> Manage meal plans and nutrition tracking.
+
+<h4>Features:
+<li>**Meal Plans:** Library of meal plans
+<li>**Create Plan:** Build custom meal plans
+<li>**Assign to Clients:** Assign plans to clients
+<li>**Food Database:** Library of foods
+<li>**Nutrition Logs:** Track client nutrition intake
+
+<h4>What to Check:
+<li>Meal plans create successfully
+<li>Food database is comprehensive
+<li>Client assignments work
+<li>Nutrition logs record correctly
+<li>Calculations are accurate
+
+<h4>Customization Needed:
+<li>Add foods to database
+<li>Update nutritional information
+<li>Customize meal plan templates
+<li>Configure macro targets
+<li>Update portion sizes
+
+---
+
+<h3>19. ATTENDANCE (`/dashboard/attendance`)
+<strong>Purpose:</strong> Track client attendance at sessions.
+
+<h4>Features:
+<li>**Attendance Logs:** Check-in/check-out records
+<li>**Summary Reports:** Attendance statistics
+<li>**Export:** Export attendance data
+
+<h4>What to Check:
+<li>Check-in/check-out works
+<li>Reports generate correctly
+<li>Export functions properly
+<li>Statistics are accurate
+
+<h4>Customization Needed:
+<li>Configure attendance policies
+<li>Set up automatic check-in (if applicable)
+<li>Update reporting periods
+<li>Customize attendance rules
+
+---
+
+<h3>20. ANALYTICS (`/dashboard/analytics`)
+<strong>Purpose:</strong> Business insights and performance metrics.
+
+<h4>Features:
+<li>**Lead Analytics:** Source tracking, conversion rates
+<li>**Revenue Analytics:** Payment tracking, event revenue
+<li>**Client Analytics:** Retention, engagement metrics
+<li>**UTM Tracking:** Marketing campaign performance
+
+<h4>What to Check:
+<li>Data displays correctly
+<li>Calculations are accurate
+<li>Date ranges work
+<li>Charts/graphs render
+<li>Export functions
+
+<h4>Customization Needed:
+<li>Add custom metrics if needed
+<li>Update date ranges
+<li>Configure report formats
+<li>Add new analytics views
+
+---
+
+<h3>21. PAYMENTS (`/dashboard/payments`)
+<strong>Purpose:</strong> Track all payments and transactions.
+
+<h4>Features:
+<li>**Payment List:** All payments with filters
+<li>**Payment Details:** Full transaction information
+<li>**Status Management:** Track payment status
+<li>**Manual Entry:** Record offline payments
+
+<h4>What to Check:
+<li>Payments appear after successful transactions
+<li>Payment status updates correctly
+<li>Manual entry works
+<li>Links to events/registrations work
+<li>Export functions
+
+<h4>Customization Needed:
+<li>Configure payment gateways
+<li>Update payment statuses
+<li>Set up payment notifications
+<li>Customize payment categories
+
+---
+
+<h3>22. NOTIFICATIONS (`/dashboard/notifications`)
+<strong>Purpose:</strong> Manage automated notifications and reminders.
+
+<h4>Features:
+<li>**Notification List:** All notifications
+<li>**Create Notification:** Schedule new notifications
+<li>**Notification Settings:** Configure delivery methods
+
+<h4>What to Check:
+<li>Notifications send correctly
+<li>Delivery methods work (email, SMS, WhatsApp)
+<li>Scheduling functions properly
+<li>Templates render correctly
+
+<h4>Customization Needed:
+<li>Update notification templates
+<li>Configure delivery schedules
+<li>Set up notification rules
+<li>Customize notification types
+
+---
+
+<h3>23. AI TOOLS (`/dashboard/ai`)
+<strong>Purpose:</strong> AI-powered tools to help with daily tasks.
+
+<h4>Features:
+<li>**Workout Plan Generator:** AI-generated workout plans
+<li>**Lead Summarizer:** Summarize lead notes
+<li>**Reply Helper:** Generate email/WhatsApp replies
+<li>**IG Caption Helper:** Instagram caption suggestions
+
+<h4>What to Check:
+<li>AI tools generate useful content
+<li>Responses are relevant
+<li>Integration with other features works
+<li>Performance is acceptable
+
+<h4>Customization Needed:
+<li>Refine AI prompts for better results
+<li>Update templates
+<li>Configure AI settings
+<li>Add new AI tools if needed
+
+---
+
+<h3>24. SETTINGS (`/dashboard/settings`)
+<strong>Purpose:</strong> Configure system settings and preferences.
+
+<h4>Features:
+<li>**User Management:** Add/edit users
+<li>**System Settings:** General configuration
+<li>**Integration Settings:** Third-party integrations
+
+<h4>What to Check:
+<li>Settings save correctly
+<li>User management works
+<li>Integrations function properly
+
+<h4>Customization Needed:
+<li>Configure business information
+<li>Set up integrations (email, WhatsApp, payment gateways)
+<li>Update user permissions
+<li>Configure system preferences
+
+---
+
+<h2>👤 CLIENT PORTAL
+
+<h3>25. CLIENT PORTAL HOME (`/portal`)
+<strong>Purpose:</strong> Client-facing dashboard for active clients.
+
+<h4>Features:
+<li>**Upcoming Appointments:** Next scheduled sessions
+<li>**Active Workout Plan:** Current workout plan
+<li>**Active Meal Plan:** Current meal plan
+<li>**Quick Stats:** Progress overview
+
+<h4>What to Check:
+<li>Client can log in
+<li>Information displays correctly
+<li>Links to other portal pages work
+
+<h4>Customization Needed:
+<li>Customize portal branding
+<li>Update client-facing messaging
+<li>Configure what clients can see
+<li>Add/remove features
+
+---
+
+<h3>26. CLIENT SCHEDULE (`/portal/schedule`)
+<strong>Purpose:</strong> Clients can view their appointment schedule.
+
+<h4>What to Check:
+<li>Appointments display correctly
+<li>Calendar view works
+<li>Booking functionality (if enabled)
+
+<h4>Customization Needed:
+<li>Configure booking rules
+<li>Set availability
+<li>Update cancellation policies
+
+---
+
+<h3>27. CLIENT PLANS (`/portal/plans`)
+<strong>Purpose:</strong> Clients can view their assigned workout and meal plans.
+
+<h4>What to Check:
+<li>Plans display correctly
+<li>Exercise/meal details show
+<li>Progress tracking works
+
+<h4>Customization Needed:
+<li>Customize plan presentation
+<li>Update instructions
+<li>Configure progress visibility
+
+---
+
+<h3>28. CLIENT PROGRESS (`/portal/progress`)
+<strong>Purpose:</strong> Clients can view their progress photos and measurements.
+
+<h4>What to Check:
+<li>Photos display correctly
+<li>Measurements show accurately
+<li>Charts/graphs render
+<li>Timeline works
+
+<h4>Customization Needed:
+<li>Configure progress metrics
+<li>Update chart types
+<li>Customize progress views
+
+---
+
+<h3>29. CLIENT NUTRITION (`/portal/nutrition`)
+<strong>Purpose:</strong> Clients can log nutrition and view meal plans.
+
+<h4>What to Check:
+<li>Meal plans display
+<li>Nutrition logging works
+<li>Calculations are accurate
+
+<h4>Customization Needed:
+<li>Update food database
+<li>Configure logging options
+<li>Customize meal plan display
+
+---
+
+<h3>30. CLIENT GOALS (`/portal/goals`)
+<strong>Purpose:</strong> Clients can view and track their fitness goals.
+
+<h4>What to Check:
+<li>Goals display correctly
+<li>Progress tracking works
+<li>Updates save properly
+
+<h4>Customization Needed:
+<li>Configure goal types
+<li>Update tracking metrics
+<li>Customize goal presentation
+
+---
+
+<h2>🔧 TECHNICAL INTEGRATIONS
+
+<h3>Payment Gateway (Razorpay)
+<li>**Status:** Integrated
+<li>**What to Check:**
+  - Payment processing works
+  - Webhooks receive correctly
+  - Payment status updates
+  - Refunds process (if needed)
+
+<h3>WhatsApp Business API
+<li>**Status:** Integrated
+<li>**What to Check:**
+  - Messages send successfully
+  - Webhooks receive messages
+  - Conversations sync
+  - Templates work (if using)
+
+<h3>Email Integration
+<li>**Status:** Integrated
+<li>**What to Check:**
+  - Emails send successfully
+  - Templates render correctly
+  - Deliverability is good
+  - Spam filters don't block
+
+<h3>Google Reviews
+<li>**Status:** Integrated (if configured)
+<li>**What to Check:**
+  - Reviews display on homepage
+  - API connection works
+  - Reviews update automatically
+
+---
+
+<h2>📋 TESTING CHECKLIST
+
+<h3>Before Going Live:
+<li>[ ] All pages load correctly
+<li>[ ] All forms submit successfully
+<li>[ ] Payment gateway processes payments
+<li>[ ] Email notifications send
+<li>[ ] WhatsApp integration works
+<li>[ ] Lead capture functions
+<li>[ ] Client portal accessible
+<li>[ ] Dashboard features work
+<li>[ ] Mobile responsiveness checked
+<li>[ ] All links work
+<li>[ ] Images load correctly
+<li>[ ] SEO meta tags set
+<li>[ ] Analytics tracking configured
+
+<h3>Regular Maintenance:
+<li>[ ] Update content regularly
+<li>[ ] Add new transformations
+<li>[ ] Create new events
+<li>[ ] Update pricing if changed
+<li>[ ] Review and respond to leads
+<li>[ ] Update testimonials
+<li>[ ] Add blog posts
+<li>[ ] Monitor analytics
+<li>[ ] Test payment gateway
+<li>[ ] Check email deliverability
+
+---
+
+<h2>🎯 CUSTOMIZATION PRIORITIES
+
+<h3>High Priority (Do First):
+1. Update all contact information
+2. Replace placeholder content with real content
+3. Add actual transformation photos
+4. Update pricing to match current rates
+5. Configure payment gateway with live keys
+6. Set up email notifications
+7. Test lead capture end-to-end
+8. Update statistics and achievements
+
+<h3>Medium Priority:
+1. Customize email templates
+2. Update WhatsApp message templates
+3. Add more exercises to library
+4. Create workout plan templates
+5. Set up meal plan templates
+6. Configure attendance policies
+7. Update FAQ with real questions
+8. Add blog content
+
+<h3>Low Priority (Nice to Have):
+1. Add more AI tools
+2. Customize analytics dashboards
+3. Add more integrations
+4. Enhance client portal features
+5. Add more customization options
+
+---
+
+<h2>📞 SUPPORT & QUESTIONS
+
+If you encounter any issues or need clarification on any feature:
+1. Check this guide first
+2. Test the feature thoroughly
+3. Document the issue with screenshots
+4. Contact your developer with specific details
+
+---
+
+<h2>📝 NOTES FOR CLIENT
+
+<h3>Important Reminders:
+<li>Always test payment flows with small amounts first
+<li>Keep backup of all content before making changes
+<li>Regularly update content to keep website fresh
+<li>Monitor analytics to understand visitor behavior
+<li>Respond to leads promptly for best conversion rates
+<li>Keep client information secure and private
+<li>Regularly backup database
+<li>Test mobile experience regularly
+
+<h3>Best Practices:
+<li>Update events at least weekly
+<li>Add new transformations monthly
+<li>Post blog content regularly
+<li>Respond to leads within 24 hours
+<li>Keep pricing up-to-date
+<li>Review analytics monthly
+<li>Test all forms monthly
+<li>Update testimonials quarterly
+
+---
+
+<strong>Document Version:</strong> 1.0  
+<strong>Last Updated:</strong> [Current Date]  
+<strong>Prepared For:</strong> KR Fitness Client Testing
+
+</body></html>
