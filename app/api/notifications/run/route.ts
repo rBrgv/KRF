@@ -190,19 +190,25 @@ export async function POST(request: NextRequest) {
 
           const scheduledAt = new Date(now.getTime() + (MEMBERSHIP_EXPIRY_DAYS_AHEAD - 1) * 24 * 60 * 60 * 1000);
           
+          // Handle clients as array or single object
+          const client = Array.isArray(membership.clients) ? membership.clients[0] : membership.clients;
+          const clientName = client?.name || 'Valued Client';
+          const clientEmail = client?.email;
+          const clientPhone = client?.phone;
+
           const payload: NotificationPayload = {
             subject: `Membership Expiring Soon - ${new Date(membership.end_date).toLocaleDateString()}`,
-            body: `Hi ${membership.clients.name},\n\nThis is a reminder that your membership is expiring soon:\n\n` +
+            body: `Hi ${clientName},\n\nThis is a reminder that your membership is expiring soon:\n\n` +
                   `Expiry Date: ${new Date(membership.end_date).toLocaleDateString()}\n` +
                   `Days Remaining: ${MEMBERSHIP_EXPIRY_DAYS_AHEAD}\n\n` +
                   `Please renew your membership to continue enjoying our services.\n\n` +
                   `Best regards,\nKR Fitness Team`,
-            whatsapp_text: `Hi ${membership.clients.name}! Your membership expires on ${new Date(membership.end_date).toLocaleDateString()}. Renew now to continue! - KR Fitness`,
+            whatsapp_text: `Hi ${clientName}! Your membership expires on ${new Date(membership.end_date).toLocaleDateString()}. Renew now to continue! - KR Fitness`,
             membership_id: membership.id,
           };
 
           // Create email notification if client has email
-          if (membership.clients?.email) {
+          if (clientEmail) {
             const { data: existingEmail } = await supabase
               .from('notifications')
               .select('id')
@@ -227,7 +233,7 @@ export async function POST(request: NextRequest) {
           }
 
           // Create WhatsApp notification if client has phone
-          if (membership.clients?.phone) {
+          if (clientPhone) {
             const { data: existingWhatsApp } = await supabase
               .from('notifications')
               .select('id')
