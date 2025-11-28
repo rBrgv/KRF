@@ -76,11 +76,11 @@ export function EmailComposeForm({
     const template = DEFAULT_EMAIL_TEMPLATES.find(t => t.id === templateId);
     if (!template) return;
 
-    const clientName = selectedClient?.name || clientName || '{{name}}';
+    const templateClientName = selectedClient?.name || clientName || '{{name}}';
     
     // Replace template variables
     const variables: Record<string, string> = {
-      name: clientName,
+      name: templateClientName,
     };
 
     const subject = replaceTemplateVariables(template.subject, variables);
