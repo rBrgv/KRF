@@ -175,7 +175,8 @@ export async function POST(request: NextRequest) {
           clients:client_id (
             id,
             name,
-            email
+            email,
+            phone
           )
         `)
         .gte('end_date', expiryDateStart.toISOString().split('T')[0])
