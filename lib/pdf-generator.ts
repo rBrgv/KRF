@@ -388,7 +388,7 @@ export async function generatePDFReport(
   }
 
   // Footer
-  const totalPages = doc.getNumberOfPages();
+  const totalPages = (doc as any).internal.getNumberOfPages();
   const footerMargin = 15; // Space from bottom for footer
   const footerLineHeight = 4;
   
