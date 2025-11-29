@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Calendar, Clock, User, Phone, Mail, X } from 'lucide-react';
+import { getTimeSlotsForDate, calculateEndTime, formatTimeForDisplay } from '@/lib/booking-slots';
 
 interface BookingSlotFormProps {
   serviceName: string;
@@ -47,41 +48,19 @@ export function BookingSlotForm({ serviceName, serviceType, onClose, onSuccess, 
     }));
   }, [searchParams]);
 
-  // Time slots
-  const morningSlots = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00'];
-  const eveningSlots = ['16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00'];
-  const allSlots = [...morningSlots, ...eveningSlots];
-
-  // Get available dates (next 30 days, excluding Sundays)
+  // Get available dates (next 30 days, including Sundays)
   const getAvailableDates = () => {
     const dates: string[] = [];
     const today = new Date();
     for (let i = 1; i <= 30; i++) {
       const date = new Date(today);
       date.setDate(today.getDate() + i);
-      const dayOfWeek = date.getDay();
-      if (dayOfWeek !== 0) { // Not Sunday
-        dates.push(date.toISOString().split('T')[0]);
-      }
+      dates.push(date.toISOString().split('T')[0]);
     }
     return dates;
   };
 
   const availableDates = getAvailableDates();
-
-  // Calculate end time (30 minutes after start)
-  const calculateEndTime = (startTime: string): string => {
-    const [hours, minutes] = startTime.split(':').map(Number);
-    let endHours = hours;
-    let endMinutes = minutes + 30;
-    
-    if (endMinutes >= 60) {
-      endHours += 1;
-      endMinutes -= 60;
-    }
-    
-    return `${String(endHours).padStart(2, '0')}:${String(endMinutes).padStart(2, '0')}`;
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -251,7 +230,7 @@ export function BookingSlotForm({ serviceName, serviceType, onClose, onSuccess, 
       {inline && (
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-white mb-2">Book Your Slot</h2>
-          <p className="text-gray-400">Select your preferred date and time for the consultation</p>
+          <p className="text-gray-400">Mon to Sat: 10:00 AM onwards (20 min slots) | Sun: 9:00-10:00 AM (20 min slots)</p>
         </div>
       )}
 
@@ -265,10 +244,12 @@ export function BookingSlotForm({ serviceName, serviceType, onClose, onSuccess, 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {availableDates.slice(0, 12).map((date) => {
                 const dateObj = new Date(date);
+                const dayOfWeek = dateObj.getDay();
                 const dayName = dateObj.toLocaleDateString('en-IN', { weekday: 'short' });
                 const dayNum = dateObj.getDate();
                 const month = dateObj.toLocaleDateString('en-IN', { month: 'short' });
                 const isSelected = selectedDate === date;
+                const isSunday = dayOfWeek === 0;
 
                 return (
                   <button
@@ -285,15 +266,18 @@ export function BookingSlotForm({ serviceName, serviceType, onClose, onSuccess, 
                         });
                       }
                     }}
-                    className={`p-3 rounded-xl border-2 transition-all ${
+                    className={`p-3 rounded-xl border-2 transition-all relative ${
                       isSelected
                         ? 'border-red-500 bg-red-500/10 text-white'
                         : 'border-gray-700 bg-gray-800/50 text-gray-300 hover:border-red-500/50'
-                    }`}
+                    } ${isSunday ? 'ring-2 ring-blue-500/30' : ''}`}
                   >
                     <div className="text-xs font-semibold">{dayName}</div>
                     <div className="text-lg font-bold">{dayNum}</div>
                     <div className="text-xs">{month}</div>
+                    {isSunday && (
+                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-400 rounded-full"></div>
+                    )}
                   </button>
                 );
               })}
@@ -304,18 +288,27 @@ export function BookingSlotForm({ serviceName, serviceType, onClose, onSuccess, 
           </div>
 
           {/* Time Selection */}
-          {selectedDate && (
-            <div>
-              <label className="flex items-center gap-2 text-sm font-semibold text-gray-300 mb-3">
-                <Clock className="w-5 h-5 text-red-400" />
-                Select Time Slot *
-              </label>
-              <div className="space-y-4">
-                <div>
-                  <div className="text-xs font-semibold text-gray-400 mb-2">Morning (8 AM - 11 AM)</div>
-                  <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
-                    {morningSlots.map((time) => {
+          {selectedDate && (() => {
+            const dateObj = new Date(selectedDate);
+            const dayOfWeek = dateObj.getDay();
+            const isSunday = dayOfWeek === 0;
+            const availableSlots = getTimeSlotsForDate(selectedDate);
+            const slotLabel = isSunday 
+              ? 'Sunday - 9:00 AM to 10:00 AM (20 min slots)'
+              : 'Mon to Sat - 10:00 AM onwards (20 min slots)';
+
+            return (
+              <div>
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-300 mb-3">
+                  <Clock className="w-5 h-5 text-red-400" />
+                  Select Time Slot *
+                </label>
+                <div className="mb-3">
+                  <div className="text-xs font-semibold text-gray-400 mb-2">{slotLabel}</div>
+                  <div className={`grid ${isSunday ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-3 md:grid-cols-4 lg:grid-cols-6'} gap-2`}>
+                    {availableSlots.map((time) => {
                       const isSelected = selectedTime === time;
+                      
                       return (
                         <button
                           key={time}
@@ -336,49 +329,18 @@ export function BookingSlotForm({ serviceName, serviceType, onClose, onSuccess, 
                               : 'border-gray-700 bg-gray-800/50 text-gray-300 hover:border-red-500/50'
                           }`}
                         >
-                          {time}
+                          {formatTimeForDisplay(time)}
                         </button>
                       );
                     })}
                   </div>
                 </div>
-                <div>
-                  <div className="text-xs font-semibold text-gray-400 mb-2">Evening (4 PM - 8 PM)</div>
-                  <div className="grid grid-cols-4 md:grid-cols-9 gap-2">
-                    {eveningSlots.map((time) => {
-                      const isSelected = selectedTime === time;
-                      return (
-                        <button
-                          key={time}
-                          type="button"
-                          onClick={() => {
-                            setSelectedTime(time);
-                            if (errors.time) {
-                              setErrors(prev => {
-                                const newErrors = { ...prev };
-                                delete newErrors.time;
-                                return newErrors;
-                              });
-                            }
-                          }}
-                          className={`p-2 rounded-lg border transition-all text-sm ${
-                            isSelected
-                              ? 'border-red-500 bg-red-500/10 text-white font-semibold'
-                              : 'border-gray-700 bg-gray-800/50 text-gray-300 hover:border-red-500/50'
-                          }`}
-                        >
-                          {time}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+                {errors.time && (
+                  <p className="mt-2 text-sm text-red-400">{errors.time}</p>
+                )}
               </div>
-              {errors.time && (
-                <p className="mt-2 text-sm text-red-400">{errors.time}</p>
-              )}
-            </div>
-          )}
+            );
+          })()}
 
           {/* Client Information */}
           <div className="space-y-4 pt-4 border-t border-gray-700">

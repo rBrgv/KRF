@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { getTimeSlotsForDate, calculateEndTime, isValidTimeSlot, formatTimeForDisplay } from '@/lib/booking-slots';
 
 interface AppointmentFormProps {
   appointment?: any;
@@ -145,27 +146,42 @@ export function AppointmentForm({ appointment, clientId: initialClientId }: Appo
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Start Time *
+              Start Time * (20 min slots only)
             </label>
-            <input
-              type="time"
+            <select
               name="start_time"
               value={formData.start_time}
-              onChange={handleChange}
+              onChange={(e) => {
+                const newStartTime = e.target.value;
+                setFormData({
+                  ...formData,
+                  start_time: newStartTime,
+                  end_time: newStartTime ? calculateEndTime(newStartTime) : '',
+                });
+              }}
               required
               className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl text-gray-100 placeholder:text-gray-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all"
-            />
+            >
+              <option value="">Select time slot</option>
+              {formData.date && getTimeSlotsForDate(formData.date).map((time) => (
+                <option key={time} value={time}>
+                  {formatTimeForDisplay(time)}
+                </option>
+              ))}
+            </select>
+            {formData.date && formData.start_time && !isValidTimeSlot(formData.date, formData.start_time) && (
+              <p className="mt-1 text-sm text-red-400">Please select a valid time slot for this day</p>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              End Time
+              End Time (auto-calculated)
             </label>
             <input
-              type="time"
-              name="end_time"
-              value={formData.end_time}
-              onChange={handleChange}
-              className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl text-gray-100 placeholder:text-gray-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all"
+              type="text"
+              value={formData.end_time || (formData.start_time ? calculateEndTime(formData.start_time) : '')}
+              readOnly
+              className="w-full px-4 py-3 bg-gray-900/30 border border-gray-700 rounded-xl text-gray-400 cursor-not-allowed"
             />
           </div>
         </div>
