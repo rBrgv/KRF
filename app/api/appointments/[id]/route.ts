@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { updateAppointmentSchema } from '@/lib/validations';
+import { isValidTimeSlot, calculateEndTime } from '@/lib/booking-slots';
 
 export async function GET(
   request: NextRequest,
@@ -50,7 +51,25 @@ export async function PATCH(
     const body = await request.json();
     const validatedData = updateAppointmentSchema.parse(body);
 
+    // Get existing appointment to check date if start_time is being updated
     const supabase = await createClient();
+    const { data: existingAppointment } = await supabase
+      .from('appointments')
+      .select('date, start_time')
+      .eq('id', id)
+      .single();
+
+    const appointmentDate = validatedData.date || existingAppointment?.date;
+
+    // Validate time slot if start_time is being updated
+    if (validatedData.start_time && appointmentDate) {
+      if (!isValidTimeSlot(appointmentDate, validatedData.start_time)) {
+        return NextResponse.json(
+          { error: 'Invalid time slot. Please select a valid booking slot.' },
+          { status: 400 }
+        );
+      }
+    }
 
     // Build update object
     const updateData: any = {};
@@ -59,8 +78,14 @@ export async function PATCH(
     }
     if (validatedData.title !== undefined) updateData.title = validatedData.title;
     if (validatedData.date !== undefined) updateData.date = validatedData.date;
-    if (validatedData.start_time !== undefined) updateData.start_time = validatedData.start_time;
-    if (validatedData.end_time !== undefined) updateData.end_time = validatedData.end_time || null;
+    if (validatedData.start_time !== undefined) {
+      updateData.start_time = validatedData.start_time;
+      // Auto-calculate end time (20 minutes after start)
+      updateData.end_time = calculateEndTime(validatedData.start_time);
+    } else if (validatedData.end_time !== undefined) {
+      // Only allow manual end_time if start_time wasn't changed
+      updateData.end_time = validatedData.end_time || null;
+    }
     if (validatedData.type !== undefined) updateData.type = validatedData.type || null;
     if (validatedData.notes !== undefined) updateData.notes = validatedData.notes || null;
 

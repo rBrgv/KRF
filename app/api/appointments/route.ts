@@ -1,11 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAppointmentSchema } from '@/lib/validations';
+import { isValidTimeSlot, calculateEndTime } from '@/lib/booking-slots';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const validatedData = createAppointmentSchema.parse(body);
+
+    // Validate time slot
+    if (!isValidTimeSlot(validatedData.date, validatedData.start_time)) {
+      return NextResponse.json(
+        { error: 'Invalid time slot. Please select a valid booking slot.' },
+        { status: 400 }
+      );
+    }
+
+    // Ensure end_time is calculated correctly (20 minutes after start)
+    const calculatedEndTime = calculateEndTime(validatedData.start_time);
+    if (validatedData.end_time && validatedData.end_time !== calculatedEndTime) {
+      // Override with correct end time
+      validatedData.end_time = calculatedEndTime;
+    } else if (!validatedData.end_time) {
+      validatedData.end_time = calculatedEndTime;
+    }
 
     const supabase = await createClient();
 

@@ -24,7 +24,7 @@ const offlineServices = [
   },
   {
     slug: 'small-group-training',
-    title: 'Small Group Training (3–5 People Max)',
+    title: 'Small Group Training (3-4 People Max)',
     description: 'Ideal for people who want the energy of a group but still want coach-level guidance.',
     highlights: [
       'Small batch = personal attention (not like crowded group classes)',
@@ -50,17 +50,17 @@ const onlineServices = [
     slug: '4-week-starter',
     title: '4 Weeks Starter Program',
     description: 'Best for people who want a plan, guidance, and accountability without spending big.',
-    link: '/contact', // Placeholder - you can create dedicated pages later
+    link: '/programs/4-week-starter',
   },
   {
     slug: 'master-transformation',
     title: 'Master Transformation Program',
     description: 'Your signature, high-value 12-week program to get serious, guaranteed transformation.',
-    link: '/contact', // Placeholder - you can create dedicated pages later
+    link: '/programs/master-transformation',
   },
 ];
 
-const coachLine = "Designed by Coach Keerthi Raj – 15 years of experience, personal transformation from 47 kg to 75 kg, natural six-pack achiever.";
+const coachLine = "Trained by Keerthi Raj";
 
 export function ServicesPageClient() {
   const [bookingModal, setBookingModal] = useState<{
@@ -142,14 +142,12 @@ export function ServicesPageClient() {
                 <p className="text-gray-400 mb-6 text-sm leading-relaxed">{service.description}</p>
                 
                 <div className="flex flex-col gap-3">
-                  {service.link && service.link !== '/contact' ? (
-                    <Link
-                      href={service.link}
-                      className="text-center rounded-full border border-gray-700 text-gray-300 px-6 py-2 font-semibold hover:border-red-500/50 hover:text-red-400 transition-all"
-                    >
-                      Learn More
-                    </Link>
-                  ) : null}
+                  <Link
+                    href={service.link}
+                    className="text-center rounded-full border border-gray-700 text-gray-300 px-6 py-2 font-semibold hover:border-red-500/50 hover:text-red-400 transition-all"
+                  >
+                    Learn More
+                  </Link>
                   <button
                     onClick={() => setBookingModal({ isOpen: true, serviceName: service.title, serviceType: 'online' })}
                     className="w-full rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 font-semibold hover:from-red-700 hover:to-red-800 transition-all"
