@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { BookPageClient } from './components/BookPageClient';
 
 export const metadata: Metadata = {
@@ -8,5 +9,15 @@ export const metadata: Metadata = {
 };
 
 export default function BookPage() {
-  return <BookPageClient />;
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="text-white">Loading...</div>
+        </div>
+      </div>
+    }>
+      <BookPageClient />
+    </Suspense>
+  );
 }
