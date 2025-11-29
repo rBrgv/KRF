@@ -242,37 +242,102 @@ export function FlipbookViewer({
         const pdf = await loadingTask.promise;
         const numPages = pdf.numPages;
         
-        const pageImages: PageImage[] = [];
+        // Initialize array with placeholder pages
+        const pageImages: PageImage[] = Array(numPages).fill(null).map((_, i) => ({
+          src: '',
+          pageNum: i + 1,
+          isLocked: !isUnlocked && (i + 1) > previewPages,
+        }));
         
-        // Load pages sequentially to avoid overwhelming the browser
-        for (let i = 1; i <= numPages; i++) {
-          const page = await pdf.getPage(i);
-          const viewport = page.getViewport({ scale: 2.0 }); // Higher scale for better quality
-          
-          const canvas = document.createElement('canvas');
-          const context = canvas.getContext('2d');
-          if (!context) {
-            throw new Error('Could not get canvas context');
-          }
-          
-          canvas.height = viewport.height;
-          canvas.width = viewport.width;
-          
-          await page.render({
-            canvasContext: context,
-            viewport: viewport,
-          }).promise;
-          
-          const imageSrc = canvas.toDataURL('image/png');
-          pageImages.push({
-            src: imageSrc,
-            pageNum: i,
-            isLocked: !isUnlocked && i > previewPages,
-          });
+        setPages(pageImages); // Show structure immediately
+        setIsLoading(false); // Allow interaction while loading
+        
+        // Load preview pages first (or all if unlocked) - in parallel for speed
+        const pagesToLoadInitially = isUnlocked ? numPages : previewPages;
+        const initialPagePromises = [];
+        
+        for (let i = 1; i <= pagesToLoadInitially; i++) {
+          initialPagePromises.push(
+            (async () => {
+              const page = await pdf.getPage(i);
+              const viewport = page.getViewport({ scale: 1.5 }); // Lower scale for faster initial load
+              
+              const canvas = document.createElement('canvas');
+              const context = canvas.getContext('2d');
+              if (!context) {
+                throw new Error('Could not get canvas context');
+              }
+              
+              canvas.height = viewport.height;
+              canvas.width = viewport.width;
+              
+              await page.render({
+                canvasContext: context,
+                viewport: viewport,
+              }).promise;
+              
+              const imageSrc = canvas.toDataURL('image/jpeg', 0.85); // Use JPEG with compression for smaller size
+              
+              setPages(prev => {
+                const updated = [...prev];
+                updated[i - 1] = {
+                  src: imageSrc,
+                  pageNum: i,
+                  isLocked: !isUnlocked && i > previewPages,
+                };
+                return updated;
+              });
+            })()
+          );
         }
         
-        setPages(pageImages);
-        setIsLoading(false);
+        // Load all pages in parallel (with limit to avoid overwhelming browser)
+        await Promise.all(initialPagePromises);
+        
+        // If unlocked, load remaining pages lazily as user navigates
+        if (isUnlocked && numPages > pagesToLoadInitially) {
+          // Load remaining pages in background (batched)
+          const batchSize = 5;
+          for (let start = pagesToLoadInitially + 1; start <= numPages; start += batchSize) {
+            const end = Math.min(start + batchSize - 1, numPages);
+            const batchPromises = [];
+            
+            for (let i = start; i <= end; i++) {
+              batchPromises.push(
+                (async () => {
+                  const page = await pdf.getPage(i);
+                  const viewport = page.getViewport({ scale: 1.5 });
+                  
+                  const canvas = document.createElement('canvas');
+                  const context = canvas.getContext('2d');
+                  if (!context) return;
+                  
+                  canvas.height = viewport.height;
+                  canvas.width = viewport.width;
+                  
+                  await page.render({
+                    canvasContext: context,
+                    viewport: viewport,
+                  }).promise;
+                  
+                  const imageSrc = canvas.toDataURL('image/jpeg', 0.85);
+                  
+                  setPages(prev => {
+                    const updated = [...prev];
+                    updated[i - 1] = {
+                      src: imageSrc,
+                      pageNum: i,
+                      isLocked: false,
+                    };
+                    return updated;
+                  });
+                })()
+              );
+            }
+            
+            await Promise.all(batchPromises);
+          }
+        }
       } catch (error: any) {
         console.error('Error loading PDF:', error);
         setError(error.message || 'Failed to load PDF. Please try downloading it instead.');
