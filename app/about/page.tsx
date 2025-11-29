@@ -4,9 +4,10 @@ import { CertificationsGallery } from '@/components/CertificationsGallery';
 import { YouTubePlaylist } from '@/components/YouTubePlaylist';
 
 export const metadata: Metadata = {
-  title: 'About Keerthi - KR Fitness | Meet Your Coach',
+  title: 'About Best Gym Trainer in Bangalore | KR Fitness Gym | Meet Your Coach',
   description:
-    'Meet Keerthi Raj, founder and lead trainer at KR Fitness Studio in Bangalore. Over 15 years of training experience with multiple international certifications.',
+    'Meet Keerthi Raj, founder and lead trainer at KR Fitness gym in Bangalore. Best gym trainer in Bengaluru with over 15 years of training experience and multiple international certifications. Expert gym trainer for online and offline training.',
+  keywords: 'gym trainer bangalore, best gym trainer bangalore, gym trainer in bengaluru, online gym trainer, fitness trainer bangalore gym',
 };
 
 export default function AboutPage() {

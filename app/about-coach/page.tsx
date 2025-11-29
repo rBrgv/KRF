@@ -5,15 +5,16 @@ import { TransformationGallery } from '@/components/TransformationGallery';
 import { YouTubePlaylist } from '@/components/YouTubePlaylist';
 
 export const metadata: Metadata = {
-  title: 'Meet Your Coach - Keerthi Raj | KR Fitness',
-  description: 'Meet Keerthi Raj, founder and lead trainer at KR Fitness Studio with over 15 years of experience. See client transformations, read the book, watch podcasts, and read reviews.',
+  title: 'Best Gym Trainer in Bangalore | Meet Keerthi Raj | KR Fitness',
+  description: 'Meet Keerthi Raj, best gym trainer in Bangalore and founder of KR Fitness gym. Over 15 years of experience. See client transformations, read the book, watch podcasts, and read reviews from best gym in Bengaluru.',
+  keywords: 'best gym trainer bangalore, gym trainer keerthi raj, gym trainer bengaluru, expert gym trainer bangalore, certified gym trainer',
 };
 
 export default function AboutCoachPage() {
   return (
-    <div className="min-h-screen snap-y snap-mandatory overflow-y-scroll md:snap-none">
+    <div className="h-screen snap-y snap-mandatory overflow-y-scroll overscroll-y-none md:h-auto md:snap-none md:overflow-visible" style={{ WebkitOverflowScrolling: 'touch' }}>
       {/* Section 1: Keerthi Raj Info Box */}
-      <section className="min-h-screen flex items-center py-20 px-4 bg-gray-950 snap-start snap-always">
+      <section className="min-h-screen flex items-center py-20 px-4 bg-gray-950 snap-start snap-always md:min-h-screen">
         <div className="container mx-auto max-w-4xl">
           <ScrollAnimation>
             <div className="premium-card rounded-2xl p-8 md:p-12">
@@ -52,27 +53,14 @@ export default function AboutCoachPage() {
       </section>
 
       {/* Section 2: Client Transformations */}
-      <section className="min-h-screen flex items-center py-20 px-4 bg-gray-900 snap-start snap-always">
+      <section className="min-h-screen flex items-center py-20 px-4 bg-gray-900 snap-start snap-always md:min-h-screen">
         <div className="container mx-auto max-w-7xl">
-          <ScrollAnimation>
-            <div className="text-center mb-12">
-              <span className="inline-block px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-xs font-semibold uppercase tracking-wider text-red-400 mb-4">
-                Real Results
-              </span>
-              <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6">
-                Client Transformations
-              </h2>
-              <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-                See the incredible transformations achieved by our dedicated clients
-              </p>
-            </div>
-          </ScrollAnimation>
           <TransformationGallery />
         </div>
       </section>
 
       {/* Section 3: Book and YouTube */}
-      <section className="min-h-screen flex items-center py-20 px-4 bg-gray-950 snap-start snap-always">
+      <section className="min-h-screen flex items-center py-20 px-4 bg-gray-950 snap-start snap-always md:min-h-screen">
         <div className="container mx-auto max-w-6xl">
           {/* Book Section */}
           <ScrollAnimation>
@@ -149,7 +137,7 @@ export default function AboutCoachPage() {
       </section>
 
       {/* Section 4: Google Reviews */}
-      <section className="min-h-screen flex items-center py-20 px-4 bg-gray-900 snap-start snap-always">
+      <section className="min-h-screen flex items-center py-20 px-4 bg-gray-900 snap-start snap-always md:min-h-screen">
         <div className="container mx-auto max-w-6xl">
           <ScrollAnimation>
             <div className="text-center mb-12">

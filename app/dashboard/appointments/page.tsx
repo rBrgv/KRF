@@ -29,7 +29,8 @@ export default async function AppointmentsPage({
       clients:client_id (name)
     `, { count: 'exact' })
     .order('date', { ascending: true })
-    .order('start_time', { ascending: true });
+    .order('start_time', { ascending: true })
+    .gte('date', new Date().toISOString().split('T')[0]); // Only show future appointments by default
 
   // Apply filters
   if (date === 'today') {

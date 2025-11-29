@@ -6,9 +6,9 @@ import { FloatingButtons } from "@/components/FloatingButtons";
 import { BackToTop } from "@/components/BackToTop";
 
 export const metadata: Metadata = {
-  title: "KR Fitness - Personal Fitness Trainer in Bangalore | Elite Training Studio",
-  description: "Personal Fitness Trainer in Bangalore offering training methods designed to fit your unique fitness journey. Fitness is not a destination; it's a way of life. EREPS Level 4 certified trainer with 15+ years experience.",
-  keywords: "personal trainer bangalore, fitness trainer, gym trainer, personal training studio, weight loss trainer, strength training, EREPS certified trainer",
+  title: "KR Fitness - Best Gym in Bangalore | Gym Near Me | Online Gym Training",
+  description: "Best gym in Bangalore with personal training, online gym programs, and fitness coaching. Find gym near me in Bengaluru. EREPS Level 4 certified trainer with 15+ years experience. Transform your body with personalized training.",
+  keywords: "gym in bangalore, gym near me, online gym, best gym bangalore, gym bangalore, fitness gym bangalore, personal trainer bangalore, gym trainer bangalore, gym in bengaluru, gym near me bangalore, online gym training, home gym trainer bangalore, fitness studio bangalore, weight loss gym bangalore, strength training gym bangalore, EREPS certified trainer, personal training studio bangalore",
   authors: [{ name: "KR Fitness Studio" }],
   openGraph: {
     title: "KR Fitness - Elite Personal Training Studio in Bangalore",
@@ -53,6 +53,11 @@ export const metadata: Metadata = {
       'te': 'https://krfitnessstudio.com?lang=te',
     },
   },
+  icons: {
+    icon: '/KR FITNESS LOGO BLACK BACKGROUND.png',
+    apple: '/KR FITNESS LOGO BLACK BACKGROUND.png',
+    shortcut: '/KR FITNESS LOGO BLACK BACKGROUND.png',
+  },
 };
 
 export default function RootLayout({
@@ -63,14 +68,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" type="image/png" href="/KR FITNESS LOGO BLACK BACKGROUND.png" />
+        <link rel="apple-touch-icon" href="/KR FITNESS LOGO BLACK BACKGROUND.png" />
+        <link rel="shortcut icon" href="/KR FITNESS LOGO BLACK BACKGROUND.png" />
         <link rel="preload" href="https://www.youtube.com/iframe_api" as="script" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "LocalBusiness",
+              "@type": ["LocalBusiness", "Gym", "ExerciseGym"],
               "name": "KR Fitness Studio",
+              "alternateName": "KR Fitness Gym Bangalore",
               "image": "/KR FITNESS LOGO BLACK BACKGROUND.png",
               "@id": "https://krfitnessstudio.com",
               "url": "https://krfitnessstudio.com",
@@ -123,7 +132,36 @@ export default function RootLayout({
               },
               "hasMap": "https://www.google.com/maps/place/KR+Fitness+Studio",
               "servesCuisine": null,
-              "menu": null
+              "menu": null,
+              "sport": "Fitness Training",
+              "amenityFeature": [
+                {
+                  "@type": "LocationFeatureSpecification",
+                  "name": "Personal Training",
+                  "value": true
+                },
+                {
+                  "@type": "LocationFeatureSpecification",
+                  "name": "Online Training",
+                  "value": true
+                },
+                {
+                  "@type": "LocationFeatureSpecification",
+                  "name": "Group Classes",
+                  "value": true
+                },
+                {
+                  "@type": "LocationFeatureSpecification",
+                  "name": "Gym Equipment",
+                  "value": true
+                },
+                {
+                  "@type": "LocationFeatureSpecification",
+                  "name": "Weight Training",
+                  "value": true
+                }
+              ],
+              "keywords": "gym in bangalore, gym near me, online gym, best gym bangalore, gym bangalore, fitness gym bangalore, gym in bengaluru"
             }),
           }}
         />
