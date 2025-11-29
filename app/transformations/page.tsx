@@ -4,12 +4,13 @@ import { TransformationTestimonials } from '@/components/TransformationTestimoni
 import { ScrollAnimation } from '@/components/ScrollAnimation';
 
 export const metadata: Metadata = {
-  title: 'Transformations - KR Fitness | Real Results',
+  title: 'Gym Transformations in Bangalore | Before & After Results | KR Fitness',
   description:
-    'See real transformation results from our clients. Before and after photos, success stories, and testimonials from KR Fitness clients.',
+    'See real gym transformation results from our clients in Bangalore. Before and after photos, success stories, and testimonials from KR Fitness gym. Real results from best gym in Bengaluru.',
+  keywords: 'gym transformations bangalore, gym results bangalore, before after gym bangalore, gym success stories bengaluru, fitness transformations bangalore gym',
   openGraph: {
-    title: 'Transformations - KR Fitness',
-    description: 'See real transformation results from our clients.',
+    title: 'Gym Transformations in Bangalore | Real Results - KR Fitness',
+    description: 'See real gym transformation results from our clients in Bangalore. Before and after photos and success stories.',
     type: 'website',
   },
 };

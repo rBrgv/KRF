@@ -5,61 +5,61 @@ import { Check } from "lucide-react";
 
 const plans = [
   {
-    name: "11-Day Genetic Activation Challenge",
+    name: "11 Days Free Mindset + Fitness Trial",
     price: "Free",
-    description: "A simple, science-based starter program built on epigenetic activation. Unlock better energy, discipline, and mindset in just 11 days.",
+    priceNote: "Zero Cost",
+    description: "Perfect for people who are confused, stuck, or scared to start.",
     features: [
-      "15-minute daily routine",
-      "Movement + breathwork + planning",
-      "Identity-building affirmations",
-      "Action templates from the challenge",
-      "Beginner-friendly and zero equipment",
-      "Based on Coach Keerthi's mindset system",
+      "Daily 15–20 min tasks (mindset, fitness, breathing, habits)",
+      '"Switch On My Fitness Genes" ritual to activate discipline',
+      "Simple method that anyone can follow",
+      "11 days habit transformation blueprint",
+      "Access to the workshop after completing the challenge",
+      "Designed to remove confusion, fear & overthinking",
     ],
+    perfectFor: "Beginners, overthinkers, people restarting, and anyone who wants clarity before committing.",
     popular: false,
-    cta: "Learn More",
-    link: "/contact",
+    cta: "Start Free Trial",
+    link: "/programs/11-day-trial",
   },
   {
-    name: "4-Week Online Transformation Program",
+    name: "4 Weeks Starter Program",
     price: "₹999",
-    priceNote: "One-time Payment",
-    originalPrice: "₹12,000+",
-    bonusValue: "₹7,600+",
-    description: "Perfect for busy professionals who want structure, accountability, and real fat loss results without needing a gym.",
+    priceNote: "Beginner Friendly",
+    description: "Best for people who want a plan, guidance, and accountability without spending big.",
     features: [
-      "Choose Any 4 Modules:",
-      "• Nutrition: Simple guide for fat loss",
-      "• DeskFit: 5-minute office workouts",
-      "• Shift: Mindset identity upgrade",
-      "• Code: 6–8 week fat-loss blueprint",
-      "• TrackPro: Daily habit tracker",
-      "• Access: Priority WhatsApp support",
-      "• GymReady: Machine-confidence guide",
-      "• Flex: Mobility routines",
-      "• Origin: Keerthi's transformation secrets",
+      "4-week structured workout plan (home or gym)",
+      "Weekly progress check-in (photos, measurements, habits)",
+      "Simple nutrition guidance—easy to follow for busy people",
+      "WhatsApp support for questions, form checks & motivation",
+      "Goal clarity session to set your transformation roadmap",
+      "Perfect balance of affordability + professional coaching",
+      "Build consistency, strength & discipline in just 30 days",
     ],
-    guarantee: "7-day satisfaction guarantee. Try it risk-free.",
+    perfectFor: "People who are confused on how to start, need structure, or want the push to get back on track.",
     popular: true,
     cta: "Start Your 4-Week Program",
     link: "/contact",
   },
   {
-    name: "KR Fitness 3-Month Remote Coaching",
+    name: "Master Transformation Program",
     price: "₹5,899",
-    priceNote: "Complete Coaching Package",
-    description: "A full coaching system for those who want professional guidance, structure, and accountability — from anywhere.",
+    priceNote: "Premium Online Coaching - 12 Weeks",
+    description: "Your signature, high-value 12-week program to get serious, guaranteed transformation.",
     features: [
-      "Initial Assessment (60 min)",
-      "Personalised 12-Week Training Program",
-      "Monthly 1:1 Consultations (3 calls)",
-      "Weekly Check-ins",
-      "Resource Pack",
-      "Community Access (optional)",
-      "Bonus: Printable progress tracker + workout cards",
+      "12-week complete customised training plan updated when needed",
+      "Personalised nutrition plan based on lifestyle, work schedule, and eating habits",
+      "Weekly 1-on-1 call with Coach Keerthi Raj (12 calls over 12 weeks)",
+      "Daily WhatsApp accountability (voice notes, check-ins, form correction)",
+      "Mindset coaching system – identity shift, habit rewiring, discipline building",
+      "Lifestyle coaching – sleep, stress, routine, digestion, recovery",
+      "Progress tracking dashboard",
+      "Premium result-focused guidance—fat loss, muscle gain, body recomposition",
+      "Faster and long-term transformation guaranteed when you follow 100%",
     ],
+    perfectFor: "People serious about transformation, busy professionals, athletes, and anyone who wants long-term results with expert guidance.",
     popular: false,
-    cta: "Enroll in Remote Coaching",
+    cta: "Enroll in Master Program",
     link: "/contact",
   },
 ];
@@ -103,16 +103,10 @@ export function PricingSection() {
                   {plan.priceNote && (
                     <div className="text-sm text-gray-400 mt-1">{plan.priceNote}</div>
                   )}
-                  {plan.originalPrice && (
-                    <div className="text-sm text-gray-500 line-through mt-1">{plan.originalPrice}</div>
-                  )}
-                  {plan.bonusValue && (
-                    <div className="text-sm text-green-400 mt-1">Bonus Value: {plan.bonusValue}</div>
-                  )}
                 </div>
                 <p className="text-gray-400 text-sm leading-relaxed">{plan.description}</p>
               </div>
-              <ul className="space-y-3 mb-8">
+              <ul className="space-y-3 mb-6">
                 {plan.features.map((feature, idx) => (
                   <li key={idx} className="flex items-start gap-3">
                     <div className="flex-shrink-0 w-5 h-5 rounded-full bg-red-500/20 border border-red-500/30 flex items-center justify-center mt-0.5">
@@ -122,9 +116,10 @@ export function PricingSection() {
                   </li>
                 ))}
               </ul>
-              {plan.guarantee && (
-                <div className="mb-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
-                  <p className="text-sm text-green-400 font-medium">{plan.guarantee}</p>
+              {plan.perfectFor && (
+                <div className="mb-6 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                  <p className="text-xs font-semibold text-blue-400 mb-1">Perfect for:</p>
+                  <p className="text-sm text-gray-300">{plan.perfectFor}</p>
                 </div>
               )}
               <Link

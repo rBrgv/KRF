@@ -62,11 +62,12 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${service.title} - KR Fitness`,
-    description: service.description,
+    title: `${service.title} | Gym in Bangalore | KR Fitness`,
+    description: `${service.description} Available at best gym in Bangalore. Online gym training also available.`,
+    keywords: `gym ${service.title.toLowerCase()} bangalore, ${service.title.toLowerCase()} gym bengaluru, online gym ${service.title.toLowerCase()}, gym training bangalore`,
     openGraph: {
-      title: `${service.title} - KR Fitness`,
-      description: service.description,
+      title: `${service.title} | Gym in Bangalore - KR Fitness`,
+      description: `${service.description} Available at best gym in Bangalore.`,
       type: 'website',
     },
   };

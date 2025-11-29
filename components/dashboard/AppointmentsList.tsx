@@ -21,6 +21,7 @@ interface Appointment {
   end_time: string | null;
   type: string | null;
   client_id: string | null;
+  notes?: string | null;
   clients?: {
     name: string;
   };
@@ -41,6 +42,16 @@ interface AppointmentsListProps {
     type?: string;
   };
 }
+
+// Helper function to extract client name from notes
+const extractClientNameFromNotes = (notes: string | null): string => {
+  if (!notes) return 'New Lead';
+  const clientMatch = notes.match(/Client:\s*(.+)/);
+  if (clientMatch) {
+    return clientMatch[1].split('\n')[0].trim();
+  }
+  return 'New Lead';
+};
 
 export function AppointmentsList({
   initialAppointments,
@@ -238,7 +249,7 @@ export function AppointmentsList({
                       <div className="text-sm font-medium text-white">{apt.title}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
-                      {apt.clients?.name || '-'}
+                      {apt.clients?.name || (apt.notes ? extractClientNameFromNotes(apt.notes) : 'New Lead')}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
                       {formatDate(apt.date)}

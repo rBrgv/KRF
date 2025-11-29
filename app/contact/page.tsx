@@ -4,9 +4,10 @@ import { LeadForm } from '@/components/forms/LeadForm';
 import { Phone, Mail, MapPin } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Contact Us - KR Fitness',
+  title: 'Contact Best Gym in Bangalore | Gym Near Me | KR Fitness',
   description:
-    "Get in touch with KR Fitness. Contact us via phone, email, or fill out our form. We're here to help you start your fitness journey.",
+    "Contact the best gym in Bangalore. Find gym near me in Bengaluru. Get in touch with KR Fitness via phone, email, or fill out our form. We're here to help you start your fitness journey at our gym in Bangalore.",
+  keywords: 'contact gym bangalore, gym near me contact, best gym bangalore contact, gym in bengaluru contact, fitness studio bangalore contact',
 };
 
 export default function ContactPage() {

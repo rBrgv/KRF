@@ -130,9 +130,6 @@ export function TransformationGallery() {
       <section className="relative py-20 px-4 bg-gray-900 overflow-hidden">
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-12">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-xs font-semibold uppercase tracking-wider text-red-400 mb-4">
-              Transformations
-            </span>
             <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
               Real Results, Real People
             </h2>

@@ -5,12 +5,13 @@ import { formatDateTime } from '@/lib/utils';
 import { Calendar, MapPin } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Upcoming Events - KR Fitness',
+  title: 'Gym Events in Bangalore | Fitness Workshops | KR Fitness',
   description:
-    'Join our fitness events, workshops, and special training sessions. Register now for upcoming events.',
+    'Join gym events and fitness workshops in Bangalore. Register for upcoming events at KR Fitness gym in Bengaluru. Special training sessions and fitness programs.',
+  keywords: 'gym events bangalore, fitness events bangalore, gym workshops bangalore, fitness workshops bengaluru, gym training events bangalore',
   openGraph: {
-    title: 'Upcoming Events - KR Fitness',
-    description: 'Join our fitness events, workshops, and special training sessions.',
+    title: 'Gym Events in Bangalore | Fitness Workshops - KR Fitness',
+    description: 'Join gym events and fitness workshops in Bangalore. Register for upcoming events at our gym.',
     type: 'website',
   },
 };

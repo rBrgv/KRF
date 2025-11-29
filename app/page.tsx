@@ -10,14 +10,14 @@ import { HeroVideoBackground } from "@/components/HeroVideoBackground";
 import { HeroSection } from "@/components/HeroSection";
 
 export const metadata: Metadata = {
-  title: "KR Fitness - Personal Fitness Trainer in Bangalore | Transform Your Body",
+  title: "Best Gym in Bangalore | Gym Near Me | Online Gym Training | KR Fitness",
   description:
-    "Personal Fitness Trainer in Bangalore offering training methods designed to fit your unique fitness journey. Push past limits with personalized training designed just for you. EREPS Level 4 certified with 15+ years experience.",
-  keywords: "personal trainer bangalore, fitness trainer, gym trainer, personal training studio, weight loss trainer, strength training, EREPS certified trainer, Keerthi Raj",
+    "Best gym in Bangalore with personal training and online gym programs. Find gym near me in Bengaluru. Transform your body with personalized training from EREPS Level 4 certified trainer with 15+ years experience. Gym in Bangalore offering weight loss, strength training, and fitness coaching.",
+  keywords: "gym in bangalore, gym near me, online gym, best gym bangalore, gym bangalore, fitness gym bangalore, gym in bengaluru, gym near me bangalore, online gym training, home gym trainer bangalore, personal trainer bangalore, gym trainer bangalore, fitness studio bangalore, weight loss gym bangalore, strength training gym bangalore, EREPS certified trainer, Keerthi Raj",
   openGraph: {
-    title: "KR Fitness - Personal Fitness Trainer in Bangalore",
+    title: "Best Gym in Bangalore | Gym Near Me | Online Gym Training - KR Fitness",
     description:
-      "Fitness is not a destination; it's a way of life - start at the gym. Transform your body and mind with personalized training programs.",
+      "Best gym in Bangalore with personal training and online gym programs. Find gym near me in Bengaluru. Transform your body and mind with personalized training programs.",
     type: "website",
     locale: "en_IN",
   },
@@ -200,13 +200,6 @@ export default function HomePage() {
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-red-600/3 rounded-full blur-3xl animate-float" style={{ animationDelay: '1.5s' }}></div>
         <div className="container mx-auto max-w-5xl text-center relative z-10">
           <ScrollAnimation>
-          <span className="inline-block px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-xs font-semibold uppercase tracking-wider text-red-400 mb-6">
-            Transformations
-          </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 text-white leading-tight">
-            From challenge to change - <br />
-            <span className="bg-gradient-to-r from-red-500 to-red-400 bg-clip-text text-transparent">watch yourself grow stronger</span>
-          </h2>
           <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
             Beyond the gym walls, your Personal Fitness Trainer in Bangalore helps you achieve lasting results.
           </p>
