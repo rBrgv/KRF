@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { TrialContent } from "./components/TrialContent";
 
 export const metadata: Metadata = {
@@ -19,6 +20,16 @@ export const metadata: Metadata = {
 export default function ElevenDayTrialPage() {
   const pdfPath = "/activate-your-genetic-potential.pdf";
 
-  return <TrialContent pdfPath={pdfPath} />;
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-white text-center">
+          <div className="text-xl">Loading...</div>
+        </div>
+      </div>
+    }>
+      <TrialContent pdfPath={pdfPath} />
+    </Suspense>
+  );
 }
 
