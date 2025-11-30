@@ -8,6 +8,7 @@ import { TransformationGallery } from "@/components/TransformationGallery";
 import { AboutStudioSection } from "@/components/AboutStudioSection";
 import { HeroVideoBackground } from "@/components/HeroVideoBackground";
 import { HeroSection } from "@/components/HeroSection";
+import { BookLaunchVideo } from "@/components/BookLaunchVideo";
 
 export const metadata: Metadata = {
   title: "Best Gym in Bangalore | Gym Near Me | Online Gym Training | KR Fitness",
@@ -98,6 +99,20 @@ export default function HomePage() {
                 TRANSFORMATION STORIES THAT INSPIRE
               </h2>
             </div>
+          </ScrollAnimation>
+
+          {/* Book Launch Video Title */}
+          <ScrollAnimation>
+            <div className="text-center mb-8">
+              <h3 className="text-2xl md:text-3xl font-bold text-white">
+                EXPERIENCE THE BOOK LAUNCH
+              </h3>
+            </div>
+          </ScrollAnimation>
+
+          {/* Book Launch Video */}
+          <ScrollAnimation>
+            <BookLaunchVideo />
           </ScrollAnimation>
 
           <ScrollAnimation>
