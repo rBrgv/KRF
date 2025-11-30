@@ -4,9 +4,9 @@ import { CertificationsGallery } from '@/components/CertificationsGallery';
 import { YouTubePlaylist } from '@/components/YouTubePlaylist';
 
 export const metadata: Metadata = {
-  title: 'About Best Gym Trainer in Bangalore | KR Fitness Gym | Meet Your Coach',
+  title: 'About Best Gym Trainer in Bangalore | KR Fitness Gym | Discover KR Fitness',
   description:
-    'Meet Keerthi Raj, founder and lead trainer at KR Fitness gym in Bangalore. Best gym trainer in Bengaluru with over 15 years of training experience and multiple international certifications. Expert gym trainer for online and offline training.',
+    'Discover KR Fitness with Keerthi Raj, founder and lead trainer at KR Fitness gym in Bangalore. Best gym trainer in Bengaluru with over 15 years of training experience and multiple international certifications. Expert gym trainer for online and offline training.',
   keywords: 'gym trainer bangalore, best gym trainer bangalore, gym trainer in bengaluru, online gym trainer, fitness trainer bangalore gym',
 };
 
@@ -68,7 +68,7 @@ export default function AboutPage() {
           <ScrollAnimation>
             <div className="text-center mb-12">
               <span className="inline-block px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-xs font-semibold uppercase tracking-wider text-red-400 mb-4">
-                Meet Your Coach
+                Discover KR Fitness
               </span>
               <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-6">MR. KEERTHI RAJ</h1>
               <p className="text-lg text-gray-400 max-w-2xl mx-auto">

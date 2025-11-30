@@ -141,11 +141,11 @@ export function TransformationGallery() {
           {/* Main Carousel */}
           <div className="relative mb-8">
             <div className="relative mx-auto max-w-sm md:max-w-md lg:max-w-lg">
-              <div className="relative aspect-[3/4] rounded-2xl overflow-hidden premium-card bg-gray-950">
+              <div className="relative min-h-[400px] md:min-h-[500px] lg:min-h-[600px] rounded-2xl overflow-hidden premium-card bg-gray-950 flex items-center justify-center">
                 <img
                   src={transformationImages[currentIndex].src}
                   alt={transformationImages[currentIndex].alt}
-                  className="w-full h-full object-cover transition-opacity duration-1000"
+                  className="max-w-full max-h-full w-auto h-auto object-contain transition-opacity duration-1000"
                   loading="eager"
                   onError={(e) => {
                     e.currentTarget.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700'%3E%3Crect fill='%231f2937' width='1200' height='700'/%3E%3Ctext fill='%236b7280' font-family='sans-serif' font-size='24' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3ETransformation%3C/text%3E%3C/svg%3E`;
