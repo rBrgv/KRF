@@ -14,8 +14,23 @@ export function BookLaunchVideo() {
   const [showControls, setShowControls] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const skipTo5DoneRef = useRef(false);
+  const isMobileRef = useRef(false);
+
+  // Detect mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
+      isMobileRef.current = mobile;
+      setIsMobile(mobile);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -60,10 +75,22 @@ export function BookLaunchVideo() {
       }
       
       // Skip to 5 seconds once when video starts playing (only if we haven't done it yet)
-      if (isPlaying && !skipTo5DoneRef.current && video.currentTime > 0 && video.currentTime < 1 && video.readyState >= 3) {
+      // On mobile, wait for more buffered data (readyState >= 4)
+      const minReadyState = isMobileRef.current ? 4 : 3;
+      if (isPlaying && !skipTo5DoneRef.current && video.currentTime > 0 && video.currentTime < 1 && video.readyState >= minReadyState) {
         skipTo5DoneRef.current = true;
-        video.currentTime = 5;
-        setCurrentTime(5);
+        // On mobile, add a small delay to ensure smooth seek
+        if (isMobileRef.current) {
+          setTimeout(() => {
+            if (video.readyState >= 4) {
+              video.currentTime = 5;
+              setCurrentTime(5);
+            }
+          }, 300);
+        } else {
+          video.currentTime = 5;
+          setCurrentTime(5);
+        }
       }
     };
 
@@ -167,6 +194,29 @@ export function BookLaunchVideo() {
         if (video.currentTime < 1) {
           skipTo5DoneRef.current = false;
         }
+        
+        // On mobile, ensure we have enough data before playing
+        if (isMobileRef.current && video.readyState < 3) {
+          // Wait for more data to load
+          await new Promise((resolve) => {
+            const checkReady = () => {
+              if (video.readyState >= 3) {
+                video.removeEventListener('canplay', checkReady);
+                video.removeEventListener('progress', checkReady);
+                resolve(undefined);
+              }
+            };
+            video.addEventListener('canplay', checkReady);
+            video.addEventListener('progress', checkReady);
+            // Timeout after 5 seconds
+            setTimeout(() => {
+              video.removeEventListener('canplay', checkReady);
+              video.removeEventListener('progress', checkReady);
+              resolve(undefined);
+            }, 5000);
+          });
+        }
+        
         await video.play();
       } catch (error) {
         console.error('Error playing video:', error);
@@ -253,7 +303,7 @@ export function BookLaunchVideo() {
                 objectFit: 'contain',
               }}
               playsInline
-              preload="auto"
+              preload={isMobile ? "metadata" : "auto"}
               onClick={togglePlay}
             >
               <source src="/book-launch.mp4" type="video/mp4" />
