@@ -74,23 +74,12 @@ export function BookLaunchVideo() {
         setDuration(video.duration);
       }
       
-      // Skip to 5 seconds once when video starts playing (only if we haven't done it yet)
-      // On mobile, wait for more buffered data (readyState >= 4)
-      const minReadyState = isMobileRef.current ? 4 : 3;
-      if (isPlaying && !skipTo5DoneRef.current && video.currentTime > 0 && video.currentTime < 1 && video.readyState >= minReadyState) {
+      // Skip to 5 seconds once when video starts playing (only on desktop, not mobile)
+      // Mobile devices struggle with seeking on large files, so skip this feature
+      if (!isMobileRef.current && isPlaying && !skipTo5DoneRef.current && video.currentTime > 0 && video.currentTime < 1 && video.readyState >= 3) {
         skipTo5DoneRef.current = true;
-        // On mobile, add a small delay to ensure smooth seek
-        if (isMobileRef.current) {
-          setTimeout(() => {
-            if (video.readyState >= 4) {
-              video.currentTime = 5;
-              setCurrentTime(5);
-            }
-          }, 300);
-        } else {
-          video.currentTime = 5;
-          setCurrentTime(5);
-        }
+        video.currentTime = 5;
+        setCurrentTime(5);
       }
     };
 
@@ -195,28 +184,7 @@ export function BookLaunchVideo() {
           skipTo5DoneRef.current = false;
         }
         
-        // On mobile, ensure we have enough data before playing
-        if (isMobileRef.current && video.readyState < 3) {
-          // Wait for more data to load
-          await new Promise((resolve) => {
-            const checkReady = () => {
-              if (video.readyState >= 3) {
-                video.removeEventListener('canplay', checkReady);
-                video.removeEventListener('progress', checkReady);
-                resolve(undefined);
-              }
-            };
-            video.addEventListener('canplay', checkReady);
-            video.addEventListener('progress', checkReady);
-            // Timeout after 5 seconds
-            setTimeout(() => {
-              video.removeEventListener('canplay', checkReady);
-              video.removeEventListener('progress', checkReady);
-              resolve(undefined);
-            }, 5000);
-          });
-        }
-        
+        // Try to play - let browser handle buffering
         await video.play();
       } catch (error) {
         console.error('Error playing video:', error);
@@ -303,7 +271,7 @@ export function BookLaunchVideo() {
                 objectFit: 'contain',
               }}
               playsInline
-              preload={isMobile ? "metadata" : "auto"}
+              preload="auto"
               onClick={togglePlay}
             >
               <source src="/book-launch.mp4" type="video/mp4" />
