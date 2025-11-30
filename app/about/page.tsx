@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { ScrollAnimation } from '@/components/ScrollAnimation';
 import { CertificationsGallery } from '@/components/CertificationsGallery';
 import { YouTubePlaylist } from '@/components/YouTubePlaylist';
@@ -132,86 +133,94 @@ export default function AboutPage() {
               />
             </div>
           </ScrollAnimation>
+        </div>
 
-          {/* Published Author Section */}
+        {/* Published Author Section */}
+        <div className="relative pt-20 pb-12 px-4 overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(220,38,38,0.05),transparent_50%)]"></div>
+          <div className="container mx-auto max-w-6xl relative z-10">
           <ScrollAnimation>
-            <div className="premium-card rounded-2xl p-8 mb-12">
+            <div className="text-center mb-12">
+              <span className="inline-block px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-xs font-semibold uppercase tracking-wider text-red-400 mb-4">
+                Published Author
+              </span>
+              <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6">
+                TRANSFORMATION STORIES THAT INSPIRE
+              </h2>
+            </div>
+          </ScrollAnimation>
+
+              <ScrollAnimation>
+            <div className="premium-card rounded-2xl p-8 md:p-12 max-w-5xl mx-auto">
               <div className="flex flex-col md:flex-row items-center gap-8">
                 {/* Book Cover */}
                 <div className="flex-shrink-0">
                   <div className="relative group">
                     <div className="absolute inset-0 bg-gradient-to-br from-red-600/20 to-red-700/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all"></div>
                     <img
-                      src="/book.png"
+                      src="/Book.png"
                       alt="I CAN GET TRANSFORMED: 9 Stories of Unbelievable Transformation by Keerthi Raj"
-                      className="relative w-48 md:w-56 rounded-xl shadow-2xl transform group-hover:scale-105 transition-transform"
+                      className="relative w-48 md:w-64 rounded-xl shadow-2xl transform group-hover:scale-105 transition-transform"
                     />
                   </div>
                 </div>
                 
                 {/* Book Info */}
                 <div className="flex-1 text-center md:text-left">
-                  <span className="inline-block px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-xs font-semibold uppercase tracking-wider text-red-400 mb-3">
-                    Published Author
-                  </span>
-                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
                     I CAN GET TRANSFORMED: 9 Stories of Unbelievable Transformation
                   </h3>
-                  <p className="text-gray-300 mb-6 leading-relaxed">
+                  <p className="text-gray-300 mb-6 leading-relaxed text-lg">
                     Discover the incredible journeys of transformation through real stories of perseverance, dedication, and life-changing results. This book shares 9 inspiring stories that prove transformation is possible for anyone willing to commit to their fitness journey.
                   </p>
                   
                   {/* Purchase Links */}
                   <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-                    {/* Flipkart Button - Authentic Style with Yellow */}
+                    <Link
+                      href="/book-viewer"
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold hover:from-red-700 hover:to-red-800 transition-all shadow-lg shadow-red-600/30 hover:shadow-red-600/50"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                      </svg>
+                      Read Now
+                    </Link>
                     <a
                       href="https://dl.flipkart.com/s/9KdIZkuuuN"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group inline-flex items-center gap-2.5 px-5 py-3 rounded-md bg-white hover:bg-gray-50 transition-all shadow-sm hover:shadow-md border border-gray-200"
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg shadow-blue-600/30 hover:shadow-blue-600/50"
                     >
-                      {/* Flipkart Logo with Yellow */}
-                      <div className="flex items-center gap-2">
-                        <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          {/* Shopping Cart Icon - Flipkart Style */}
-                          <rect x="3" y="6" width="18" height="14" rx="2" fill="#FFC700" stroke="#2874f0" strokeWidth="1.5"/>
-                          <circle cx="8" cy="19" r="1.5" fill="#2874f0"/>
-                          <circle cx="19" cy="19" r="1.5" fill="#2874f0"/>
-                          <path d="M3 8h18" stroke="#2874f0" strokeWidth="1.5" strokeLinecap="round"/>
-                          <path d="M7 12h10" stroke="#2874f0" strokeWidth="1.2" strokeLinecap="round"/>
-                        </svg>
-                        <span className="text-[#2874f0] font-bold text-sm">Flipkart</span>
-                      </div>
-                      <span className="text-gray-600 text-sm font-medium">Buy Now</span>
-                      <svg className="w-4 h-4 text-gray-400 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                       </svg>
+                      Buy on Flipkart
                     </a>
-                    
-                    {/* Amazon Button - Authentic Style */}
                     <a
                       href="https://amzn.in/d/5m90BjH"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group inline-flex items-center gap-2.5 px-5 py-3 rounded-md bg-[#FF9900] hover:bg-[#FF8800] transition-all shadow-sm hover:shadow-md"
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-orange-600 to-orange-700 text-white font-semibold hover:from-orange-700 hover:to-orange-800 transition-all shadow-lg shadow-orange-600/30 hover:shadow-orange-600/50"
                     >
-                      {/* Amazon Arrow */}
-                      <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                       </svg>
-                      <span className="text-white font-semibold text-sm">Buy on Amazon</span>
-                      <svg className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                      </svg>
+                      Buy on Amazon
                     </a>
                   </div>
                 </div>
               </div>
             </div>
           </ScrollAnimation>
-          
+          </div>
+        </div>
+      </section>
+
+      {/* Certifications Section */}
+      <section className="relative pt-12 pb-20 px-4 bg-gray-900">
+        <div className="container mx-auto max-w-4xl">
           <ScrollAnimation>
-            <h2 className="text-3xl font-bold mt-12 mb-8 text-white text-center">Certifications</h2>
+            <h2 className="text-3xl font-bold mb-8 text-white text-center">Certifications</h2>
             
             {/* Personal Training Certificate */}
             <div className="premium-card rounded-2xl p-6 mb-8">
