@@ -100,9 +100,11 @@ const loadPDFJS = async (): Promise<any> => {
 
 interface FlipbookViewerProps {
   pdfPath: string;
-  previewPages?: number; // Number of free preview pages (e.g., 5)
+  previewPages?: number | number[]; // Number of free preview pages (e.g., 5) or array of specific page numbers
   isUnlocked?: boolean; // Whether user has purchased
   onPurchase?: () => void;
+  coverImage?: string; // Path to cover image (e.g., "/Book.jpg")
+  backCoverImage?: string; // Path to back cover image (e.g., "/BACK COVER.jpg")
 }
 
 interface PageImage {
@@ -115,7 +117,9 @@ export function FlipbookViewer({
   pdfPath, 
   previewPages = 5, 
   isUnlocked = false,
-  onPurchase 
+  onPurchase,
+  coverImage,
+  backCoverImage
 }: FlipbookViewerProps) {
   const flipBookRef = useRef<any>(null);
   const [pages, setPages] = useState<PageImage[]>([]);
@@ -242,24 +246,82 @@ export function FlipbookViewer({
         const pdf = await loadingTask.promise;
         const numPages = pdf.numPages;
         
-        // Initialize array with placeholder pages
-        const pageImages: PageImage[] = Array(numPages).fill(null).map((_, i) => ({
-          src: '',
-          pageNum: i + 1,
-          isLocked: !isUnlocked && (i + 1) > previewPages,
-        }));
+        // Determine which pages are preview pages
+        const previewPageNumbers = Array.isArray(previewPages) 
+          ? previewPages 
+          : Array.from({ length: previewPages }, (_, i) => i + 1);
+        
+        const isPreviewPage = (pageNum: number) => {
+          return isUnlocked || previewPageNumbers.includes(pageNum);
+        };
+        
+        // Build pages array with cover images if provided
+        const pageImages: PageImage[] = [];
+        
+        // Add cover image if provided
+        if (coverImage) {
+          pageImages.push({
+            src: coverImage,
+            pageNum: 0, // 0 indicates cover
+            isLocked: false,
+          });
+        }
+        
+        // If unlocked, add all PDF pages
+        // If not unlocked, only add preview pages
+        if (isUnlocked) {
+          // Add all PDF pages
+          for (let i = 1; i <= numPages; i++) {
+            pageImages.push({
+              src: '',
+              pageNum: i,
+              isLocked: false,
+            });
+          }
+        } else {
+          // Only add preview pages (sorted to show in order)
+          const sortedPreviewPages = [...previewPageNumbers].sort((a, b) => a - b);
+          for (const pageNum of sortedPreviewPages) {
+            if (pageNum > 0 && pageNum <= numPages) {
+              pageImages.push({
+                src: '',
+                pageNum: pageNum,
+                isLocked: false,
+              });
+            }
+          }
+          
+          // Add a locked page indicator after preview pages
+          pageImages.push({
+            src: '',
+            pageNum: -1, // -1 indicates locked placeholder
+            isLocked: true,
+          });
+        }
+        
+        // Add back cover image if provided (only if unlocked)
+        if (backCoverImage && isUnlocked) {
+          pageImages.push({
+            src: backCoverImage,
+            pageNum: numPages + 1, // numPages + 1 indicates back cover
+            isLocked: false,
+          });
+        }
         
         setPages(pageImages); // Show structure immediately
         setIsLoading(false); // Allow interaction while loading
         
-        // Load preview pages first (or all if unlocked) - in parallel for speed
-        const pagesToLoadInitially = isUnlocked ? numPages : previewPages;
+        // Load preview pages (or all if unlocked) - in parallel for speed
+        const pagesToLoad = isUnlocked 
+          ? Array.from({ length: numPages }, (_, i) => i + 1)
+          : previewPageNumbers.filter(p => p > 0 && p <= numPages);
+        
         const initialPagePromises = [];
         
-        for (let i = 1; i <= pagesToLoadInitially; i++) {
+        for (const pageNum of pagesToLoad) {
           initialPagePromises.push(
             (async () => {
-              const page = await pdf.getPage(i);
+              const page = await pdf.getPage(pageNum);
               const viewport = page.getViewport({ scale: 1.5 }); // Lower scale for faster initial load
               
               const canvas = document.createElement('canvas');
@@ -280,11 +342,15 @@ export function FlipbookViewer({
               
               setPages(prev => {
                 const updated = [...prev];
-                updated[i - 1] = {
-                  src: imageSrc,
-                  pageNum: i,
-                  isLocked: !isUnlocked && i > previewPages,
-                };
+                // Find the index of this page (accounting for cover image)
+                const pageIndex = updated.findIndex(p => p.pageNum === pageNum);
+                if (pageIndex !== -1) {
+                  updated[pageIndex] = {
+                    src: imageSrc,
+                    pageNum: pageNum,
+                    isLocked: !isPreviewPage(pageNum),
+                  };
+                }
                 return updated;
               });
             })()
@@ -295,17 +361,19 @@ export function FlipbookViewer({
         await Promise.all(initialPagePromises);
         
         // If unlocked, load remaining pages lazily as user navigates
-        if (isUnlocked && numPages > pagesToLoadInitially) {
-          // Load remaining pages in background (batched)
-          const batchSize = 5;
-          for (let start = pagesToLoadInitially + 1; start <= numPages; start += batchSize) {
-            const end = Math.min(start + batchSize - 1, numPages);
-            const batchPromises = [];
-            
-            for (let i = start; i <= end; i++) {
-              batchPromises.push(
+        if (isUnlocked) {
+          const loadedPages = new Set(pagesToLoad);
+          const remainingPages = Array.from({ length: numPages }, (_, i) => i + 1)
+            .filter(p => !loadedPages.has(p));
+          
+          if (remainingPages.length > 0) {
+            // Load remaining pages in background (batched)
+            const batchSize = 5;
+            for (let i = 0; i < remainingPages.length; i += batchSize) {
+              const batch = remainingPages.slice(i, i + batchSize);
+              const batchPromises = batch.map((pageNum) =>
                 (async () => {
-                  const page = await pdf.getPage(i);
+                  const page = await pdf.getPage(pageNum);
                   const viewport = page.getViewport({ scale: 1.5 });
                   
                   const canvas = document.createElement('canvas');
@@ -324,18 +392,21 @@ export function FlipbookViewer({
                   
                   setPages(prev => {
                     const updated = [...prev];
-                    updated[i - 1] = {
-                      src: imageSrc,
-                      pageNum: i,
-                      isLocked: false,
-                    };
+                    const pageIndex = updated.findIndex(p => p.pageNum === pageNum);
+                    if (pageIndex !== -1) {
+                      updated[pageIndex] = {
+                        src: imageSrc,
+                        pageNum: pageNum,
+                        isLocked: false,
+                      };
+                    }
                     return updated;
                   });
                 })()
               );
+              
+              await Promise.all(batchPromises);
             }
-            
-            await Promise.all(batchPromises);
           }
         }
       } catch (error: any) {
@@ -360,9 +431,11 @@ export function FlipbookViewer({
       const page = pages[nextPage];
       
       // Check if next page is locked
-      if (page && page.isLocked && onPurchase) {
-        onPurchase();
-        return;
+      if (page && page.isLocked) {
+        if (onPurchase) {
+          onPurchase();
+        }
+        return; // Don't allow navigation to locked page
       }
       
       flipBookRef.current.pageFlip().flipNext();
@@ -370,7 +443,8 @@ export function FlipbookViewer({
   };
 
   const handlePageChange = (e: any) => {
-    setCurrentPage(e.data);
+    const newPageIndex = e.data;
+    setCurrentPage(newPageIndex);
   };
 
   if (error) {
@@ -430,9 +504,13 @@ export function FlipbookViewer({
           <div className="text-center px-2 md:px-4">
             <p className="text-white font-semibold text-sm md:text-base">
               <span className="hidden sm:inline">Page </span>{currentPage + 1}<span className="hidden sm:inline"> of {pages.length}</span>
-              {!isUnlocked && previewPages < pages.length && (
+              {!isUnlocked && (() => {
+                const previewCount = Array.isArray(previewPages) ? previewPages.length : previewPages;
+                const pdfPages = pages.filter(p => p.pageNum > 0 && p.pageNum < 1000).length; // Filter out cover pages (0 and >1000)
+                return previewCount < pdfPages;
+              })() && (
                 <span className="text-gray-400 text-xs md:text-sm ml-1 md:ml-2 hidden sm:inline">
-                  ({previewPages} free preview)
+                  ({Array.isArray(previewPages) ? previewPages.length : previewPages} free preview)
                 </span>
               )}
             </p>
@@ -520,7 +598,7 @@ export function FlipbookViewer({
                         Unlock Full Access
                       </h3>
                       <p className="text-gray-400 mb-6 max-w-md">
-                        This page is part of the full book. Purchase to unlock all {pages.length} pages and download the complete PDF.
+                        You've reached the end of the preview. Purchase to unlock the full book with all pages and download the complete PDF.
                       </p>
                       {onPurchase && (
                         <button
@@ -531,10 +609,10 @@ export function FlipbookViewer({
                         </button>
                       )}
                     </div>
-                  ) : (
+                  ) : page.src ? (
                     <img
                       src={page.src}
-                      alt={`Page ${page.pageNum}`}
+                      alt={page.pageNum === 0 ? 'Book Cover' : page.pageNum > 1000 ? 'Back Cover' : `Page ${page.pageNum}`}
                       style={{
                         maxWidth: '100%',
                         maxHeight: '100%',
@@ -543,6 +621,10 @@ export function FlipbookViewer({
                       }}
                       draggable={false}
                     />
+                  ) : (
+                    <div className="flex items-center justify-center h-full w-full">
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500"></div>
+                    </div>
                   )}
                 </div>
               ))}
@@ -566,10 +648,16 @@ export function FlipbookViewer({
       )}
 
       {/* Preview Notice */}
-      {!isUnlocked && pages.length > previewPages && (
+      {!isUnlocked && (() => {
+        const previewCount = Array.isArray(previewPages) ? previewPages.length : previewPages;
+        const pdfPages = pages.filter(p => p.pageNum > 0 && p.pageNum < 1000).length; // Filter out cover pages
+        return pdfPages > previewCount;
+      })() && (
         <div className="mt-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg text-center">
           <p className="text-blue-400 text-sm">
-            Preview: Pages 1-{previewPages} of {pages.length}. 
+            Preview: {Array.isArray(previewPages) 
+              ? `Pages ${previewPages.sort((a, b) => a - b).join(', ')}` 
+              : `Pages 1-${previewPages}`} of {pages.filter(p => p.pageNum > 0 && p.pageNum < 1000).length}. 
             <button
               onClick={onPurchase}
               className="ml-2 text-blue-300 hover:text-blue-200 font-semibold underline"

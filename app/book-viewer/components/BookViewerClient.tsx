@@ -39,7 +39,7 @@ export function BookViewerClient() {
                 </span>
               </h1>
               <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-                Flip through the pages below. Preview the first 5 pages free, then unlock the full book to download.
+                Flip through the pages below. Preview selected pages free, then unlock the full book to download.
               </p>
             </div>
           </ScrollAnimation>
@@ -51,9 +51,11 @@ export function BookViewerClient() {
         <div className="container mx-auto max-w-6xl">
           <FlipbookViewer
             pdfPath={pdfPath}
-            previewPages={5} // Show first 5 pages free
+            previewPages={[1, 4, 7, 9, 10, 99]} // Show specific pages: 1, 4, 7, 9, 10, 99
             isUnlocked={isUnlocked}
             onPurchase={handlePurchase}
+            coverImage="/Book.png"
+            backCoverImage="/BACK COVER.jpg"
           />
         </div>
       </section>
@@ -71,7 +73,7 @@ export function BookViewerClient() {
                   <div className="text-3xl font-bold text-red-400 mb-2">1</div>
                   <h3 className="text-xl font-semibold text-white mb-2">Preview Free</h3>
                   <p className="text-gray-400">
-                    Flip through the first 5 pages to see what's inside
+                    Flip through selected preview pages to see what's inside
                   </p>
                 </div>
                 <div>
@@ -96,4 +98,5 @@ export function BookViewerClient() {
     </div>
   );
 }
+
 
