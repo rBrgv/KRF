@@ -1,3 +1,4 @@
+// Version: 2.0 - Updated ctaSecondary to "Discover KR Fitness"
 export type Translations = {
   nav: {
     home: string;
@@ -40,7 +41,7 @@ const translations: Record<string, Translations> = {
       subtitle: 'Train Anywhere. One Plan.',
       description: 'Discover your personalized Health Score in less than 60 seconds.',
       cta: 'Start Your Health Check',
-      ctaSecondary: 'Meet Your Coach',
+      ctaSecondary: 'Discover KR Fitness',
     },
     common: {
       learnMore: 'Learn More',
