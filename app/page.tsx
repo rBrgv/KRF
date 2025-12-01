@@ -8,7 +8,6 @@ import { TransformationGallery } from "@/components/TransformationGallery";
 import { AboutStudioSection } from "@/components/AboutStudioSection";
 import { HeroVideoBackground } from "@/components/HeroVideoBackground";
 import { HeroSection } from "@/components/HeroSection";
-import { BookLaunchVideo } from "@/components/BookLaunchVideo";
 
 export const metadata: Metadata = {
   title: "Best Gym in Bangalore | Gym Near Me | Online Gym Training | KR Fitness",
@@ -108,11 +107,6 @@ export default function HomePage() {
                 EXPERIENCE THE BOOK LAUNCH
               </h3>
             </div>
-          </ScrollAnimation>
-
-          {/* Book Launch Video */}
-          <ScrollAnimation>
-            <BookLaunchVideo />
           </ScrollAnimation>
 
           <ScrollAnimation>
