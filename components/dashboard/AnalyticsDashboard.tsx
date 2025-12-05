@@ -26,12 +26,12 @@ interface AnalyticsData {
 }
 
 const statusColors: Record<string, string> = {
-  new: 'bg-blue-100 text-blue-800',
-  contacted: 'bg-yellow-100 text-yellow-800',
-  qualified: 'bg-purple-100 text-purple-800',
-  converted: 'bg-green-100 text-green-800',
-  not_interested: 'bg-red-100 text-red-800',
-  lost: 'bg-gray-100 text-gray-800',
+  new: 'bg-blue-500/20 text-blue-400 border border-blue-500/30',
+  contacted: 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30',
+  qualified: 'bg-purple-500/20 text-purple-400 border border-purple-500/30',
+  converted: 'bg-green-500/20 text-green-400 border border-green-500/30',
+  not_interested: 'bg-red-500/20 text-red-400 border border-red-500/30',
+  lost: 'bg-gray-500/20 text-gray-400 border border-gray-500/30',
 };
 
 export function AnalyticsDashboard() {
@@ -58,16 +58,16 @@ export function AnalyticsDashboard() {
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-lg shadow p-8 text-center">
-        <p className="text-gray-600">Loading analytics...</p>
+      <div className="premium-card rounded-2xl p-8 text-center">
+        <p className="text-gray-400">Loading analytics...</p>
       </div>
     );
   }
 
   if (!data) {
     return (
-      <div className="bg-white rounded-lg shadow p-8 text-center">
-        <p className="text-red-600">Failed to load analytics</p>
+      <div className="premium-card rounded-2xl p-8 text-center">
+        <p className="text-red-400">Failed to load analytics</p>
       </div>
     );
   }
@@ -76,66 +76,74 @@ export function AnalyticsDashboard() {
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="premium-card rounded-2xl p-6 hover:border-red-500/30 transition-all duration-300">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Total Leads</p>
-              <p className="text-3xl font-bold">{data.summary.totalLeads}</p>
+              <p className="text-sm text-gray-400 mb-1">Total Leads</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-red-500 via-red-600 to-red-500 bg-clip-text text-transparent">
+                {data.summary.totalLeads}
+              </p>
             </div>
-            <div className="bg-blue-100 p-3 rounded-lg">
-              <Users className="w-6 h-6 text-blue-600" />
+            <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+              <Users className="w-6 h-6 text-red-400" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="premium-card rounded-2xl p-6 hover:border-red-500/30 transition-all duration-300">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Leads This Week</p>
-              <p className="text-3xl font-bold">{data.summary.leadsThisWeek}</p>
+              <p className="text-sm text-gray-400 mb-1">Leads This Week</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-red-500 via-red-600 to-red-500 bg-clip-text text-transparent">
+                {data.summary.leadsThisWeek}
+              </p>
             </div>
-            <div className="bg-green-100 p-3 rounded-lg">
-              <TrendingUp className="w-6 h-6 text-green-600" />
+            <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+              <TrendingUp className="w-6 h-6 text-red-400" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="premium-card rounded-2xl p-6 hover:border-red-500/30 transition-all duration-300">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Conversion Rate</p>
-              <p className="text-3xl font-bold">{data.summary.conversionRate}%</p>
+              <p className="text-sm text-gray-400 mb-1">Conversion Rate</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-red-500 via-red-600 to-red-500 bg-clip-text text-transparent">
+                {data.summary.conversionRate}%
+              </p>
             </div>
-            <div className="bg-orange-100 p-3 rounded-lg">
-              <Target className="w-6 h-6 text-orange-600" />
+            <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+              <Target className="w-6 h-6 text-red-400" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="premium-card rounded-2xl p-6 hover:border-red-500/30 transition-all duration-300">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Event Revenue (Month)</p>
-              <p className="text-3xl font-bold">₹{data.summary.eventRevenueThisMonth}</p>
+              <p className="text-sm text-gray-400 mb-1">Event Revenue (Month)</p>
+              <p className="text-3xl font-bold bg-gradient-to-r from-red-500 via-red-600 to-red-500 bg-clip-text text-transparent">
+                ₹{data.summary.eventRevenueThisMonth}
+              </p>
             </div>
-            <div className="bg-purple-100 p-3 rounded-lg">
-              <DollarSign className="w-6 h-6 text-purple-600" />
+            <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+              <DollarSign className="w-6 h-6 text-red-400" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Leads by Source */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Leads by Source</h2>
+      <div className="premium-card rounded-2xl p-6 hover:border-red-500/30 transition-all duration-300">
+        <h2 className="text-xl font-semibold text-white mb-4">Leads by Source</h2>
         {data.leadsBySource.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Source</th>
-                  <th className="text-right py-3 px-4 font-semibold text-gray-700">Count</th>
-                  <th className="text-right py-3 px-4 font-semibold text-gray-700">Percentage</th>
+                <tr className="border-b border-gray-800">
+                  <th className="text-left py-3 px-4 font-semibold text-gray-300">Source</th>
+                  <th className="text-right py-3 px-4 font-semibold text-gray-300">Count</th>
+                  <th className="text-right py-3 px-4 font-semibold text-gray-300">Percentage</th>
                 </tr>
               </thead>
               <tbody>
@@ -145,17 +153,17 @@ export function AnalyticsDashboard() {
                       ? ((item.count / data.summary.totalLeads) * 100).toFixed(1)
                       : '0';
                   return (
-                    <tr key={item.source} className="border-b hover:bg-gray-50">
+                    <tr key={item.source} className="border-b border-gray-800 hover:bg-gray-800/30 transition-colors">
                       <td className="py-3 px-4">
-                        <span className="font-medium">{item.source || 'Unknown'}</span>
+                        <span className="font-medium text-white">{item.source || 'Unknown'}</span>
                       </td>
-                      <td className="py-3 px-4 text-right">{item.count}</td>
+                      <td className="py-3 px-4 text-right text-gray-300">{item.count}</td>
                       <td className="py-3 px-4 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <span>{percentage}%</span>
-                          <div className="w-24 bg-gray-200 rounded-full h-2">
+                          <span className="text-gray-300">{percentage}%</span>
+                          <div className="w-24 bg-gray-800 rounded-full h-2">
                             <div
-                              className="bg-orange-600 h-2 rounded-full"
+                              className="bg-gradient-to-r from-red-500 to-red-600 h-2 rounded-full"
                               style={{ width: `${percentage}%` }}
                             />
                           </div>
@@ -173,16 +181,16 @@ export function AnalyticsDashboard() {
       </div>
 
       {/* Leads by Status */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Leads by Status</h2>
+      <div className="premium-card rounded-2xl p-6 hover:border-red-500/30 transition-all duration-300">
+        <h2 className="text-xl font-semibold text-white mb-4">Leads by Status</h2>
         {data.leadsByStatus.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
-                  <th className="text-right py-3 px-4 font-semibold text-gray-700">Count</th>
-                  <th className="text-right py-3 px-4 font-semibold text-gray-700">Percentage</th>
+                <tr className="border-b border-gray-800">
+                  <th className="text-left py-3 px-4 font-semibold text-gray-300">Status</th>
+                  <th className="text-right py-3 px-4 font-semibold text-gray-300">Count</th>
+                  <th className="text-right py-3 px-4 font-semibold text-gray-300">Percentage</th>
                 </tr>
               </thead>
               <tbody>
@@ -192,23 +200,23 @@ export function AnalyticsDashboard() {
                       ? ((item.count / data.summary.totalLeads) * 100).toFixed(1)
                       : '0';
                   return (
-                    <tr key={item.status} className="border-b hover:bg-gray-50">
+                    <tr key={item.status} className="border-b border-gray-800 hover:bg-gray-800/30 transition-colors">
                       <td className="py-3 px-4">
                         <span
                           className={`px-2 py-1 rounded-full text-xs ${
-                            statusColors[item.status] || 'bg-gray-100 text-gray-800'
+                            statusColors[item.status] || 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
                           }`}
                         >
                           {item.status}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-right">{item.count}</td>
+                      <td className="py-3 px-4 text-right text-gray-300">{item.count}</td>
                       <td className="py-3 px-4 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <span>{percentage}%</span>
-                          <div className="w-24 bg-gray-200 rounded-full h-2">
+                          <span className="text-gray-300">{percentage}%</span>
+                          <div className="w-24 bg-gray-800 rounded-full h-2">
                             <div
-                              className="bg-orange-600 h-2 rounded-full"
+                              className="bg-gradient-to-r from-red-500 to-red-600 h-2 rounded-full"
                               style={{ width: `${percentage}%` }}
                             />
                           </div>
@@ -226,28 +234,28 @@ export function AnalyticsDashboard() {
       </div>
 
       {/* Event Registrations */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Event Registrations & Revenue</h2>
+      <div className="premium-card rounded-2xl p-6 hover:border-red-500/30 transition-all duration-300">
+        <h2 className="text-xl font-semibold text-white mb-4">Event Registrations & Revenue</h2>
         {data.eventRegistrations.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Event</th>
-                  <th className="text-right py-3 px-4 font-semibold text-gray-700">
+                <tr className="border-b border-gray-800">
+                  <th className="text-left py-3 px-4 font-semibold text-gray-300">Event</th>
+                  <th className="text-right py-3 px-4 font-semibold text-gray-300">
                     Registrations
                   </th>
-                  <th className="text-right py-3 px-4 font-semibold text-gray-700">Revenue</th>
+                  <th className="text-right py-3 px-4 font-semibold text-gray-300">Revenue</th>
                 </tr>
               </thead>
               <tbody>
                 {data.eventRegistrations.map((item) => (
-                  <tr key={item.event_id} className="border-b hover:bg-gray-50">
+                  <tr key={item.event_id} className="border-b border-gray-800 hover:bg-gray-800/30 transition-colors">
                     <td className="py-3 px-4">
-                      <span className="font-medium">{item.event_title}</span>
+                      <span className="font-medium text-white">{item.event_title}</span>
                     </td>
-                    <td className="py-3 px-4 text-right">{item.registrations}</td>
-                    <td className="py-3 px-4 text-right font-semibold">₹{item.revenue}</td>
+                    <td className="py-3 px-4 text-right text-gray-300">{item.registrations}</td>
+                    <td className="py-3 px-4 text-right font-semibold text-red-400">₹{item.revenue}</td>
                   </tr>
                 ))}
               </tbody>
@@ -260,17 +268,17 @@ export function AnalyticsDashboard() {
 
       {/* UTM Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4">Top UTM Sources</h2>
+        <div className="premium-card rounded-2xl p-6 hover:border-red-500/30 transition-all duration-300">
+          <h2 className="text-xl font-semibold text-white mb-4">Top UTM Sources</h2>
           {data.utmBreakdown.topSources.length > 0 ? (
             <div className="space-y-3">
               {data.utmBreakdown.topSources.map((item, index) => (
-                <div key={item.source} className="flex items-center justify-between">
+                <div key={item.source} className="flex items-center justify-between py-2 border-b border-gray-800 last:border-0">
                   <div className="flex items-center gap-3">
                     <span className="text-gray-500 text-sm w-6">{index + 1}.</span>
-                    <span className="font-medium">{item.source}</span>
+                    <span className="font-medium text-white">{item.source}</span>
                   </div>
-                  <span className="text-gray-700 font-semibold">{item.count}</span>
+                  <span className="text-gray-300 font-semibold">{item.count}</span>
                 </div>
               ))}
             </div>
@@ -279,17 +287,17 @@ export function AnalyticsDashboard() {
           )}
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4">Top UTM Campaigns</h2>
+        <div className="premium-card rounded-2xl p-6 hover:border-red-500/30 transition-all duration-300">
+          <h2 className="text-xl font-semibold text-white mb-4">Top UTM Campaigns</h2>
           {data.utmBreakdown.topCampaigns.length > 0 ? (
             <div className="space-y-3">
               {data.utmBreakdown.topCampaigns.map((item, index) => (
-                <div key={item.campaign} className="flex items-center justify-between">
+                <div key={item.campaign} className="flex items-center justify-between py-2 border-b border-gray-800 last:border-0">
                   <div className="flex items-center gap-3">
                     <span className="text-gray-500 text-sm w-6">{index + 1}.</span>
-                    <span className="font-medium">{item.campaign}</span>
+                    <span className="font-medium text-white">{item.campaign}</span>
                   </div>
-                  <span className="text-gray-700 font-semibold">{item.count}</span>
+                  <span className="text-gray-300 font-semibold">{item.count}</span>
                 </div>
               ))}
             </div>
@@ -300,22 +308,22 @@ export function AnalyticsDashboard() {
       </div>
 
       {/* Leads Over Time (Simple List) */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Leads Over Time (Last 30 Days)</h2>
+      <div className="premium-card rounded-2xl p-6 hover:border-red-500/30 transition-all duration-300">
+        <h2 className="text-xl font-semibold text-white mb-4">Leads Over Time (Last 30 Days)</h2>
         {data.leadsOverTime.length > 0 ? (
           <div className="space-y-2">
             {data.leadsOverTime.map((item) => (
-              <div key={item.date} className="flex items-center justify-between py-2 border-b">
-                <span className="text-gray-700">
+              <div key={item.date} className="flex items-center justify-between py-2 border-b border-gray-800 last:border-0">
+                <span className="text-gray-300">
                   {new Date(item.date).toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
                   })}
                 </span>
                 <div className="flex items-center gap-4">
-                  <div className="w-32 bg-gray-200 rounded-full h-2">
+                  <div className="w-32 bg-gray-800 rounded-full h-2">
                     <div
-                      className="bg-orange-600 h-2 rounded-full"
+                      className="bg-gradient-to-r from-red-500 to-red-600 h-2 rounded-full"
                       style={{
                         width: `${
                           (item.count /
@@ -325,7 +333,7 @@ export function AnalyticsDashboard() {
                       }}
                     />
                   </div>
-                  <span className="font-semibold w-8 text-right">{item.count}</span>
+                  <span className="font-semibold w-8 text-right text-gray-300">{item.count}</span>
                 </div>
               </div>
             ))}
