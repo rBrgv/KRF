@@ -15,6 +15,7 @@ const healthAssessmentSchema = z.object({
     .regex(/^[6-9]\d{9}$/, 'Phone number must start with 6, 7, 8, or 9'),
   email: z.string().email('Invalid email address').optional().or(z.literal('')),
   goal: z.string().optional().or(z.literal('')), // Add goal field (optional for backward compatibility)
+  ageGroup: z.string().min(1, 'Age group is required'),
   answers: z.record(z.any()),
 });
 
@@ -67,6 +68,7 @@ export async function POST(request: NextRequest) {
       name: validated.name.trim(),
       phone: validated.phone.trim(),
       email: validated.email?.trim() || null,
+      age_group: validated.ageGroup,
       height_cm: heightCm,
       weight_kg: weightKg,
       bmi: bmi,

@@ -17,7 +17,7 @@ export function HealthAssessmentWizard() {
   const [step, setStep] = useState<WizardStep>('landing');
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, any>>({});
-  const [leadInfo, setLeadInfo] = useState({ name: '', phone: '', email: '', goal: '' });
+  const [leadInfo, setLeadInfo] = useState({ name: '', phone: '', email: '', goal: '', ageGroup: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
   const [result, setResult] = useState<AssessmentResult | null>(null);
@@ -380,6 +380,9 @@ export function HealthAssessmentWizard() {
     const goalError = validateGoal(leadInfo.goal);
     if (goalError) newErrors.goal = goalError;
     
+    const ageGroupError = !leadInfo.ageGroup ? 'Age group is required' : '';
+    if (ageGroupError) newErrors.ageGroup = ageGroupError;
+    
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -404,6 +407,7 @@ export function HealthAssessmentWizard() {
           phone: phoneDigits,
           email: leadInfo.email.trim() || undefined,
           goal: leadInfo.goal.trim() || undefined,
+          ageGroup: leadInfo.ageGroup,
           answers,
         }),
       });
@@ -757,6 +761,42 @@ export function HealthAssessmentWizard() {
 
           <div>
             <label className="block text-white font-semibold mb-2">
+              Age Group <span className="text-red-400">*</span>
+            </label>
+            <select
+              value={leadInfo.ageGroup}
+              onChange={(e) => {
+                setLeadInfo(prev => ({ ...prev, ageGroup: e.target.value }));
+                if (errors.ageGroup) {
+                  setErrors(prev => {
+                    const newErrors = { ...prev };
+                    delete newErrors.ageGroup;
+                    return newErrors;
+                  });
+                }
+              }}
+              className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
+                errors.ageGroup ? 'border-red-500' : 'border-gray-700'
+              }`}
+            >
+              <option value="">Select your age group</option>
+              <option value="18-25">18-25 years</option>
+              <option value="26-35">26-35 years</option>
+              <option value="36-45">36-45 years</option>
+              <option value="46-55">46-55 years</option>
+              <option value="56-65">56-65 years</option>
+              <option value="65+">65+ years</option>
+            </select>
+            {errors.ageGroup && (
+              <p className="mt-1 text-sm text-red-400 flex items-center gap-1">
+                <AlertCircle className="w-4 h-4" />
+                {errors.ageGroup}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-white font-semibold mb-2">
               Fitness Goal <span className="text-red-400">*</span>
             </label>
             <textarea
@@ -865,7 +905,7 @@ export function HealthAssessmentWizard() {
             onClick={() => {
               setStep('landing');
               setExistingAssessment(null);
-              setLeadInfo({ name: '', phone: '', email: '', goal: '' });
+              setLeadInfo({ name: '', phone: '', email: '', goal: '', ageGroup: '' });
               setAnswers({});
             }}
             className="w-full px-6 py-3 bg-gray-800 text-white rounded-lg font-semibold hover:bg-gray-700 transition-all"
