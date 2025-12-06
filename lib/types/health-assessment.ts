@@ -51,6 +51,7 @@ export type ScaleQuestion = QuestionBase & {
 export type ChoiceQuestion = QuestionBase & {
   type: "choice";
   choices: { value: string; label: string }[];
+  multiple?: boolean; // If true, allows multiple selections
 };
 
 export type NumericQuestion = QuestionBase & {

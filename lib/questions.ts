@@ -109,6 +109,7 @@ export const QUESTIONS: Question[] = [
       { value: 'not_consistent', label: 'I feel I may not stay consistent' },
       { value: 'postpone', label: 'I postpone and say "I will start later"' },
     ],
+    multiple: true,
     required: true,
   },
 
@@ -127,6 +128,7 @@ export const QUESTIONS: Question[] = [
       { value: 'leaner_lighter', label: 'Leaner & lighter' },
       { value: 'more_energetic', label: 'More energetic' },
     ],
+    multiple: true,
     required: true,
   },
   {
@@ -154,6 +156,7 @@ export const QUESTIONS: Question[] = [
       { value: 'badminton_sports', label: 'Badminton / Sports' },
       { value: 'not_active', label: 'Not active currently' },
     ],
+    multiple: true,
     required: true,
   },
   {

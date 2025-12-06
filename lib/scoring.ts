@@ -5,6 +5,27 @@
 import { ScoreBreakdown } from './types/health-assessment';
 
 /**
+ * Helper to get value from answer (handles arrays for multiple-choice questions)
+ * For arrays, returns the first value (or you can implement averaging logic)
+ */
+function getAnswerValue(answer: any): any {
+  if (Array.isArray(answer)) {
+    return answer.length > 0 ? answer[0] : null;
+  }
+  return answer;
+}
+
+/**
+ * Helper to check if any value in array matches
+ */
+function hasAnswerValue(answer: any, values: string[]): boolean {
+  if (Array.isArray(answer)) {
+    return answer.some(val => values.includes(val));
+  }
+  return values.includes(answer);
+}
+
+/**
  * Calculate BMI from height (cm) and weight (kg)
  */
 export function calculateBMI(heightCm: number, weightKg: number): number {
@@ -60,324 +81,173 @@ export function calculateScores(answers: Record<string, any>): ScoreBreakdown {
 
 /**
  * Physical Health Score (0-25)
- * Based on: energy, stairs, flexibility, exercise frequency, daily steps
+ * Based on: energy_level, daily_rest, tired_after_waking
  */
 function calculatePhysicalScore(answers: Record<string, any>): number {
   let score = 0;
   
-  // Energy level (1-5 scale) → 0-5 points
-  const energy = parseInt(answers.physical_energy) || 1;
-  score += (energy - 1) * 1.25; // 1→0, 2→1.25, 3→2.5, 4→3.75, 5→5
-  
-  // Stairs (yes/no) → 0-5 points
-  const stairs = answers.physical_stairs || 'no';
-  score += stairs === 'yes' ? 5 : 0;
-  
-  // Flexibility (choice) → 0-5 points
-  const flexibility = answers.physical_flexibility || 'very_limited';
-  const flexibilityPoints: Record<string, number> = {
-    'very_flexible': 5,
-    'moderate': 3.5,
-    'somewhat_limited': 2,
-    'very_limited': 0.5,
+  // Energy level → 0-8.33 points
+  const energy = getAnswerValue(answers.energy_level) || 'low_energy';
+  const energyPoints: Record<string, number> = {
+    'always_energetic': 8.33,
+    'few_hours': 6.25,
+    'only_morning': 4.17,
+    'low_energy': 2.08,
   };
-  score += flexibilityPoints[flexibility] || 0;
+  score += energyPoints[energy] || 0;
   
-  // Exercise frequency → 0-5 points
-  const exerciseFreq = answers.physical_exercise_frequency || 'none';
-  const exercisePoints: Record<string, number> = {
-    'none': 0,
-    '1-2': 1.5,
-    '3-4': 3,
-    '5-6': 4.5,
-    'daily': 5,
+  // Daily rest (sleep + breaks) → 0-8.33 points
+  const rest = getAnswerValue(answers.daily_rest) || 'less_5';
+  const restPoints: Record<string, number> = {
+    '8_plus': 8.33,
+    '6_7': 6.25,
+    '5_6': 4.17,
+    'less_5': 2.08,
   };
-  score += exercisePoints[exerciseFreq] || 0;
+  score += restPoints[rest] || 0;
   
-  // Daily steps → 0-5 points
-  const steps = answers.physical_daily_steps || 'under_3000';
-  const stepsPoints: Record<string, number> = {
-    'under_3000': 0,
-    '3000-5000': 1.5,
-    '5000-8000': 3,
-    '8000-10000': 4.5,
-    'over_10000': 5,
+  // Tired after waking → 0-8.34 points
+  const tired = getAnswerValue(answers.tired_after_waking) || 'almost_daily';
+  const tiredPoints: Record<string, number> = {
+    'never': 8.34,
+    'sometimes': 6.25,
+    'often': 4.17,
+    'almost_daily': 2.08,
   };
-  score += stepsPoints[steps] || 0;
+  score += tiredPoints[tired] || 0;
   
   return Math.min(25, score);
 }
 
 /**
  * Nutrition Score (0-15)
- * Based on: breakfast, outside food, sugar, water, fruits, late-night eating
+ * Based on: nutrition_attention
  */
 function calculateNutritionScore(answers: Record<string, any>): number {
   let score = 0;
   
-  // Breakfast (never skip = good) → 0-2.5 points
-  const breakfast = answers.lifestyle_skip_breakfast || 'always';
-  const breakfastPoints: Record<string, number> = {
-    'never': 2.5,
-    'rarely': 2,
-    'sometimes': 1.5,
-    'often': 1,
-    'always': 0,
+  // Nutrition attention → 0-15 points
+  const nutrition = getAnswerValue(answers.nutrition_attention) || 'dont_think';
+  const nutritionPoints: Record<string, number> = {
+    'plan_meals': 15,
+    'try_not_consistent': 10,
+    'eat_available': 5,
+    'dont_think': 2.5,
   };
-  score += breakfastPoints[breakfast] || 0;
-  
-  // Outside food (less = better) → 0-2.5 points
-  const outsideFood = answers.lifestyle_outside_food || 'daily';
-  const outsideFoodPoints: Record<string, number> = {
-    'rarely': 2.5,
-    'weekly': 2,
-    'often': 1.5,
-    'daily': 0.5,
-  };
-  score += outsideFoodPoints[outsideFood] || 0;
-  
-  // Sugar consumption (low = better) → 0-2.5 points
-  const sugar = answers.lifestyle_sugar || 'high';
-  const sugarPoints: Record<string, number> = {
-    'very_low': 2.5,
-    'low': 2,
-    'moderate': 1.5,
-    'high': 0.5,
-  };
-  score += sugarPoints[sugar] || 0;
-  
-  // Water intake (more = better) → 0-2.5 points
-  const water = answers.lifestyle_water || 'under_1';
-  const waterPoints: Record<string, number> = {
-    'under_1': 0.5,
-    '1-2': 1.5,
-    '2-3': 2.5,
-    'over_3': 2.5,
-  };
-  score += waterPoints[water] || 0;
-  
-  // Fruits (more = better) → 0-2.5 points
-  const fruits = answers.lifestyle_fruits || 'rarely';
-  const fruitsPoints: Record<string, number> = {
-    'rarely': 0.5,
-    'weekly': 1.5,
-    'often': 2,
-    'daily': 2.5,
-  };
-  score += fruitsPoints[fruits] || 0;
-  
-  // Late-night eating (never = better) → 0-2.5 points
-  const lateNight = answers.lifestyle_late_night || 'often';
-  const lateNightPoints: Record<string, number> = {
-    'never': 2.5,
-    'rarely': 2,
-    'sometimes': 1.5,
-    'often': 0.5,
-  };
-  score += lateNightPoints[lateNight] || 0;
+  score += nutritionPoints[nutrition] || 0;
   
   return Math.min(15, score);
 }
 
 /**
  * Lifestyle Score (0-15)
- * Based on: sleep duration, sleep quality
+ * Based on: daily_rest (already counted in physical, but keeping for structure)
+ * This is now part of physical score, so return 0 or merge logic
  */
 function calculateLifestyleScore(answers: Record<string, any>): number {
-  let score = 0;
-  
-  // Sleep duration (7-8 hours = optimal) → 0-7.5 points
-  const sleepDuration = answers.lifestyle_sleep_duration || 'under_5';
-  const sleepDurationPoints: Record<string, number> = {
-    'under_5': 1,
-    '5-6': 3,
-    '6-7': 5,
-    '7-8': 7.5,
-    'over_8': 6,
-  };
-  score += sleepDurationPoints[sleepDuration] || 0;
-  
-  // Sleep quality (1-5 scale) → 0-7.5 points
-  const sleepQuality = parseInt(answers.lifestyle_sleep_quality) || 1;
-  score += (sleepQuality - 1) * 1.875; // 1→0, 2→1.875, 3→3.75, 4→5.625, 5→7.5
-  
-  return Math.min(15, score);
+  // Lifestyle is now part of physical score (daily_rest)
+  // Keeping this function for structure but returning 0
+  // Or you can add other lifestyle factors here
+  return 0;
 }
 
 /**
  * Mental Fitness Score (0-20)
- * Based on: confidence, stress management, consistency, emotional eating, work/life stress
+ * Based on: stress_level, fitness_barrier
  */
 function calculateMentalScore(answers: Record<string, any>): number {
   let score = 0;
   
-  // Confidence (choice, higher = better) → 0-4 points
-  const confidence = answers.mental_confidence || 'not_confident';
-  const confidencePoints: Record<string, number> = {
-    'very_confident': 4,
-    'confident': 3.5,
-    'moderate': 2.5,
-    'somewhat': 1.5,
-    'not_confident': 0.5,
+  // Stress level → 0-10 points
+  const stress = getAnswerValue(answers.stress_level) || 'very_high';
+  const stressPoints: Record<string, number> = {
+    'very_low': 10,
+    'manageable': 7.5,
+    'high': 5,
+    'very_high': 2.5,
   };
-  score += confidencePoints[confidence] || 0;
+  score += stressPoints[stress] || 0;
   
-  // Stress management (choice, higher = better) → 0-4 points
-  const stressMgmt = answers.mental_stress_management || 'very_poor';
-  const stressMgmtPoints: Record<string, number> = {
-    'excellent': 4,
-    'good': 3.5,
-    'moderate': 2.5,
-    'poor': 1.5,
-    'very_poor': 0.5,
-  };
-  score += stressMgmtPoints[stressMgmt] || 0;
-  
-  // Consistency (choice, higher = better) → 0-4 points
-  const consistency = answers.mental_consistency || 'very_inconsistent';
-  const consistencyPoints: Record<string, number> = {
-    'very_consistent': 4,
-    'consistent': 3.5,
-    'moderate': 2.5,
-    'inconsistent': 1.5,
-    'very_inconsistent': 0.5,
-  };
-  score += consistencyPoints[consistency] || 0;
-  
-  // Emotional eating (choice, lower = better, reverse) → 0-4 points
-  const emotionalEating = answers.mental_emotional_eating || 'very_often';
-  const emotionalEatingPoints: Record<string, number> = {
-    'never': 4,
-    'rarely': 3.5,
-    'sometimes': 2.5,
-    'often': 1.5,
-    'very_often': 0.5,
-  };
-  score += emotionalEatingPoints[emotionalEating] || 0;
-  
-  // Work/life stress (choice, lower = better, reverse) → 0-4 points
-  const workLifeStress = answers.mental_work_life_stress || 'very_significantly';
-  const workLifeStressPoints: Record<string, number> = {
-    'not_at_all': 4,
-    'slightly': 3.5,
-    'moderately': 2.5,
-    'significantly': 1.5,
-    'very_significantly': 0.5,
-  };
-  score += workLifeStressPoints[workLifeStress] || 0;
+  // Fitness barrier (multiple choice - count barriers, fewer = better) → 0-10 points
+  const barriers = Array.isArray(answers.fitness_barrier) ? answers.fitness_barrier : 
+                   (answers.fitness_barrier ? [answers.fitness_barrier] : []);
+  // Fewer barriers = higher score
+  const barrierCount = barriers.length;
+  const barrierPoints = Math.max(0, 10 - (barrierCount * 2.5)); // 0 barriers = 10, 1 = 7.5, 2 = 5, 3 = 2.5, 4 = 0
+  score += barrierPoints;
   
   return Math.min(20, score);
 }
 
 /**
  * Pain/Mobility Score (0-10)
- * Based on: back pain, knee pain, neck/shoulder, sitting hours, toe touch, surgery history
+ * Based on: pain_experience
  */
 function calculatePainMobilityScore(answers: Record<string, any>): number {
-  let score = 10; // Start with full score, deduct for issues
+  let score = 0;
   
-  // Back pain (frequency choice, never = best) → deduct 0-2 points
-  const backPain = answers.pain_back || 'daily';
-  const backPainDeduction: Record<string, number> = {
-    'never': 0,
-    'rarely': 0.5,
-    'sometimes': 1,
-    'often': 1.5,
-    'daily': 2,
+  // Pain experience → 0-10 points (reverse: no pain = high score)
+  const pain = getAnswerValue(answers.pain_experience) || 'often_daily';
+  const painPoints: Record<string, number> = {
+    'no_pain': 10,
+    'rarely': 7.5,
+    'sometimes': 5,
+    'often_daily': 2.5,
   };
-  score -= backPainDeduction[backPain] || 0;
+  score += painPoints[pain] || 0;
   
-  // Knee pain (frequency choice, never = best) → deduct 0-2 points
-  const kneePain = answers.pain_knee || 'daily';
-  const kneePainDeduction: Record<string, number> = {
-    'never': 0,
-    'rarely': 0.5,
-    'sometimes': 1,
-    'often': 1.5,
-    'daily': 2,
-  };
-  score -= kneePainDeduction[kneePain] || 0;
-  
-  // Neck/shoulder (frequency choice, never = best) → deduct 0-2 points
-  const neckShoulder = answers.pain_neck_shoulder || 'daily';
-  const neckShoulderDeduction: Record<string, number> = {
-    'never': 0,
-    'rarely': 0.5,
-    'sometimes': 1,
-    'often': 1.5,
-    'daily': 2,
-  };
-  score -= neckShoulderDeduction[neckShoulder] || 0;
-  
-  // Sitting hours (more = worse) → deduct 0-1.5 points
-  const sitting = answers.pain_sitting_hours || 'over_10';
-  const sittingDeduction: Record<string, number> = {
-    'under_4': 0,
-    '4-6': 0.5,
-    '6-8': 1,
-    '8-10': 1.5,
-    'over_10': 1.5,
-  };
-  score -= sittingDeduction[sitting] || 0;
-  
-  // Toe touch (yes/no) → deduct 0-1 point
-  const toeTouch = answers.pain_toe_touch || 'no';
-  score -= toeTouch === 'no' ? 1 : 0;
-  
-  // Surgery history (none = best) → deduct 0-1.5 points
-  const surgery = answers.pain_surgery_history || 'major';
-  const surgeryDeduction: Record<string, number> = {
-    'none': 0,
-    'minor': 0.5,
-    'moderate': 1,
-    'major': 1.5,
-  };
-  score -= surgeryDeduction[surgery] || 0;
-  
-  return Math.max(0, Math.min(10, score));
+  return Math.min(10, score);
 }
 
 /**
  * Goal Readiness Score (0-15)
- * Based on: timeline, weekly commitment, preference, motivation
+ * Based on: desired_feeling, medical_condition, current_activity, last_proud_moment, first_outcome
  */
 function calculateGoalReadinessScore(answers: Record<string, any>): number {
   let score = 0;
   
-  // Timeline (realistic = better) → 0-3.75 points
-  const timeline = answers.goal_timeline || '1_month';
-  const timelinePoints: Record<string, number> = {
-    '1_month': 1, // Unrealistic
-    '3_months': 2.5,
-    '6_months': 3.5,
-    '1_year': 3.75,
-    'long_term': 3.75, // Best
-  };
-  score += timelinePoints[timeline] || 0;
+  // Desired feeling (multiple choice - more positive feelings = better) → 0-3 points
+  const feelings = Array.isArray(answers.desired_feeling) ? answers.desired_feeling : 
+                   (answers.desired_feeling ? [answers.desired_feeling] : []);
+  const feelingCount = feelings.length;
+  score += Math.min(3, feelingCount * 0.75); // 1 feeling = 0.75, 2 = 1.5, 3 = 2.25, 4+ = 3
   
-  // Weekly commitment (more = better) → 0-3.75 points
-  const commitment = answers.goal_weekly_commitment || '1-2';
-  const commitmentPoints: Record<string, number> = {
-    '1-2': 1.5,
-    '3-4': 3,
-    '5-6': 3.75,
-    'daily': 3.5, // Slightly less (sustainability)
+  // Medical condition (no condition = better) → 0-3 points
+  const medical = getAnswerValue(answers.medical_condition) || 'medication_rehab';
+  const medicalPoints: Record<string, number> = {
+    'no_condition': 3,
+    'thyroid_pcos_diabetes_bp': 2,
+    'surgery_injury': 1.5,
+    'medication_rehab': 1,
   };
-  score += commitmentPoints[commitment] || 0;
+  score += medicalPoints[medical] || 0;
   
-  // Preference (any is good, studio slightly better) → 0-3.75 points
-  const preference = answers.goal_preference || 'home';
-  const preferencePoints: Record<string, number> = {
-    'studio': 3.75,
-    'home': 3,
-    'online': 3,
-    'mixed': 3.5,
+  // Current activity (multiple choice - active = better) → 0-3 points
+  const activities = Array.isArray(answers.current_activity) ? answers.current_activity : 
+                     (answers.current_activity ? [answers.current_activity] : []);
+  const hasActivity = !activities.includes('not_active') && activities.length > 0;
+  score += hasActivity ? 3 : 1; // Active = 3, not active = 1
+  
+  // Last proud moment (recent = better) → 0-3 points
+  const proud = getAnswerValue(answers.last_proud_moment) || 'never_felt';
+  const proudPoints: Record<string, number> = {
+    'recently': 3,
+    'months_ago': 2,
+    'years_ago': 1,
+    'never_felt': 0.5,
   };
-  score += preferencePoints[preference] || 0;
+  score += proudPoints[proud] || 0;
   
-  // Motivation (1-5 scale, higher = better) → 0-3.75 points
-  const motivation = parseInt(answers.goal_motivation) || 1;
-  score += (motivation - 1) * 0.9375; // 1→0, 2→0.9375, 3→1.875, 4→2.8125, 5→3.75
+  // First outcome (clear goal = better) → 0-3 points
+  const outcome = getAnswerValue(answers.first_outcome) || 'lighter_energetic';
+  const outcomePoints: Record<string, number> = {
+    'lighter_energetic': 3,
+    'pain_reduction': 2.5,
+    'inch_fat_loss': 2.5,
+    'strength_improvement': 2,
+    'out_of_medication': 1.5,
+  };
+  score += outcomePoints[outcome] || 0;
   
   return Math.min(15, score);
 }

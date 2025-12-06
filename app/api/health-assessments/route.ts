@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import { calculateScores, calculateBMI } from '@/lib/scoring';
 import { getOverallCategory, getRecommendations } from '@/lib/recommendations';
 import { successResponse, validationErrorResponse, serverErrorResponse } from '@/lib/api/response';
+import { checkDuplicateLead, mergeSources, mergeGoals } from '@/lib/leads/duplicate-check';
+import { formatDate } from '@/lib/utils';
 import { z } from 'zod';
 
 // Validation schema
@@ -102,53 +104,103 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // Create a lead from the assessment
+    // Create or update a lead from the assessment
     let leadId: string | null = null;
     try {
       // Use provided goal text or extract from answers if available
       const goalText = validated.goal?.trim() || '';
-      const goalAnswer = validated.answers.goal_primary;
+      const goalAnswer = validated.answers.first_outcome || validated.answers.desired_feeling;
       const goalMap: Record<string, string> = {
-        'weight_loss': 'Weight Loss',
-        'weight_gain': 'Weight Gain / Muscle Building',
-        'strength': 'Build Strength',
-        'flexibility': 'Improve Flexibility',
-        'endurance': 'Improve Endurance',
-        'pain_relief': 'Pain Relief / Rehabilitation',
-        'general_fitness': 'General Fitness',
+        'lighter_energetic': 'Feel lighter & energetic',
+        'pain_reduction': 'Pain reduction',
+        'inch_fat_loss': 'Visible inch loss / fat loss',
+        'strength_improvement': 'Strength improvement',
+        'out_of_medication': 'Get out of medication',
+        'confident': 'Confident',
+        'strong': 'Strong',
+        'pain_free': 'Pain-free',
+        'leaner_lighter': 'Leaner & lighter',
+        'more_energetic': 'More energetic',
       };
       const goal = goalText || goalMap[goalAnswer] || 'Health & Fitness Assessment';
       
-      const { data: leadData, error: leadError } = await supabase
-        .from('leads')
-        .insert([
-          {
-            name: validated.name.trim(),
-            phone: validated.phone.trim(),
-            email: validated.email?.trim() || null,
-            goal: goal,
-            source: 'health_assessment',
-            status: 'new',
-            notes: `Health Assessment Score: ${scores.overall}/100 (${categoryLabels[category]}). Generated from health diagnostic system.`,
-          },
-        ])
-        .select()
-        .single();
-      
-      if (leadError) {
-        console.error('[Health Assessments API] Error creating lead:', leadError);
-        // Don't fail the assessment if lead creation fails, just log it
-      } else {
-        leadId = leadData.id;
+      // Check for duplicate lead (same phone or email)
+      const { isDuplicate, existingLead } = await checkDuplicateLead(
+        supabase,
+        validated.phone.trim(),
+        validated.email?.trim() || null
+      );
+
+      if (isDuplicate && existingLead) {
+        // Use existing lead ID
+        leadId = existingLead.id;
         
-        // Update assessment to link it to the lead
+        // Update existing lead with assessment info
+        const assessmentNote = `Health Assessment (${formatDate(new Date().toISOString())}): Score ${scores.overall}/100 (${categoryLabels[category]})`;
+        const updatedNotes = existingLead.notes
+          ? `${existingLead.notes}\n\n${assessmentNote}`
+          : assessmentNote;
+        
+        const mergedSource = mergeSources(existingLead.source, 'health_assessment');
+        const mergedGoal = mergeGoals(existingLead.goal, goal);
+        
+        await supabase
+          .from('leads')
+          .update({
+            notes: updatedNotes,
+            source: mergedSource,
+            goal: mergedGoal || existingLead.goal,
+            // Update email if it was missing
+            email: existingLead.email || validated.email?.trim() || null,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', existingLead.id);
+        
+        // Link assessment to existing lead
         await supabase
           .from('health_assessments')
           .update({
             converted_to_lead: true,
-            lead_id: leadId,
+            lead_id: existingLead.id,
           })
           .eq('id', data.id);
+        
+        console.log('[Health Assessments API] Linked assessment to existing lead:', existingLead.id);
+      } else {
+        // No duplicate found, create new lead
+        const { data: leadData, error: leadError } = await supabase
+          .from('leads')
+          .insert([
+            {
+              name: validated.name.trim(),
+              phone: validated.phone.trim(),
+              email: validated.email?.trim() || null,
+              goal: goal,
+              source: 'health_assessment',
+              status: 'new',
+              notes: `Health Assessment Score: ${scores.overall}/100 (${categoryLabels[category]}). Generated from health diagnostic system.`,
+            },
+          ])
+          .select()
+          .single();
+        
+        if (leadError) {
+          console.error('[Health Assessments API] Error creating lead:', leadError);
+          // Don't fail the assessment if lead creation fails, just log it
+        } else {
+          leadId = leadData.id;
+          
+          // Update assessment to link it to the lead
+          await supabase
+            .from('health_assessments')
+            .update({
+              converted_to_lead: true,
+              lead_id: leadId,
+            })
+            .eq('id', data.id);
+          
+          console.log('[Health Assessments API] Created new lead:', leadId);
+        }
       }
     } catch (leadErr) {
       console.error('[Health Assessments API] Error in lead creation process:', leadErr);

@@ -46,28 +46,66 @@ export function QuestionRenderer({ question, value, onChange, error }: QuestionR
   }
   
   if (question.type === 'choice') {
+    const isMultiple = question.multiple === true;
+    const selectedValues = isMultiple 
+      ? (Array.isArray(value) ? value : [])
+      : (value ? [value] : []);
+    
+    const handleChoiceClick = (choiceValue: string) => {
+      if (isMultiple) {
+        // Toggle selection for multiple choice
+        const currentArray = Array.isArray(value) ? value : [];
+        const newValue = currentArray.includes(choiceValue)
+          ? currentArray.filter(v => v !== choiceValue)
+          : [...currentArray, choiceValue];
+        onChange(newValue.length > 0 ? newValue : null);
+      } else {
+        // Single selection
+        onChange(choiceValue);
+      }
+    };
+    
     return (
       <div className="space-y-4">
         <label className="block text-lg font-semibold text-white mb-4">
           {question.question}
           {question.required && <span className="text-red-400 ml-1">*</span>}
+          {isMultiple && (
+            <span className="text-gray-400 ml-2 text-sm font-normal">(Select all that apply)</span>
+          )}
         </label>
         
         <div className="space-y-2">
-          {question.choices.map((choice) => (
-            <button
-              key={choice.value}
-              type="button"
-              onClick={() => onChange(choice.value)}
-              className={`w-full text-left py-3 px-4 rounded-lg font-medium transition-all ${
-                value === choice.value
-                  ? 'bg-red-600 text-white shadow-lg shadow-red-600/50'
-                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-              }`}
-            >
-              {choice.label}
-            </button>
-          ))}
+          {question.choices.map((choice) => {
+            const isSelected = selectedValues.includes(choice.value);
+            return (
+              <button
+                key={choice.value}
+                type="button"
+                onClick={() => handleChoiceClick(choice.value)}
+                className={`w-full text-left py-3 px-4 rounded-lg font-medium transition-all flex items-center gap-3 ${
+                  isSelected
+                    ? 'bg-red-600 text-white shadow-lg shadow-red-600/50'
+                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                }`}
+              >
+                {isMultiple && (
+                  <div className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center ${
+                    isSelected 
+                      ? 'bg-white border-white' 
+                      : 'border-gray-400'
+                  }`}>
+                    {isSelected && (
+                      <svg className="w-3 h-3 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </div>
+                )}
+                <span>{choice.label}</span>
+              </button>
+            );
+          })}
         </div>
         
         {error && <p className="text-red-400 text-sm mt-2">{error}</p>}

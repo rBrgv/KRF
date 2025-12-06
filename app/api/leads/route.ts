@@ -5,6 +5,7 @@ import { sanitizeSearchInput } from '@/lib/utils/sanitize';
 import { successResponse, errorResponse, validationErrorResponse, serverErrorResponse } from '@/lib/api/response';
 import { getPaginationParams } from '@/lib/api/auth';
 import { requireAdminOrTrainer } from '@/lib/api/auth';
+import { checkDuplicateLead, mergeSources, mergeGoals } from '@/lib/leads/duplicate-check';
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,7 +19,69 @@ export async function POST(request: NextRequest) {
 
     const supabase = await createClient();
 
-    // Insert lead into database
+    // Check for duplicate lead (same phone or email)
+    const { isDuplicate, existingLead } = await checkDuplicateLead(
+      supabase,
+      validatedData.phone.trim(),
+      validatedData.email?.trim() || null
+    );
+
+    if (isDuplicate && existingLead) {
+      // Update existing lead instead of creating duplicate
+      const newSource = validatedData.source || 'website';
+      const mergedSource = mergeSources(existingLead.source, newSource);
+      const mergedGoal = mergeGoals(existingLead.goal, validatedData.goal?.trim() || null);
+      
+      // Update existing lead with new information
+      const updateData: any = {
+        source: mergedSource,
+        updated_at: new Date().toISOString(),
+      };
+      
+      // Update email if it was missing
+      if (!existingLead.email && validatedData.email?.trim()) {
+        updateData.email = validatedData.email.trim();
+      }
+      
+      // Update goal if provided
+      if (mergedGoal) {
+        updateData.goal = mergedGoal;
+      }
+      
+      // Update UTM params if new ones provided (prefer new over old)
+      if (validatedData.utm_source?.trim()) {
+        updateData.utm_source = validatedData.utm_source.trim();
+      }
+      if (validatedData.utm_medium?.trim()) {
+        updateData.utm_medium = validatedData.utm_medium.trim();
+      }
+      if (validatedData.utm_campaign?.trim()) {
+        updateData.utm_campaign = validatedData.utm_campaign.trim();
+      }
+      if (validatedData.utm_content?.trim()) {
+        updateData.utm_content = validatedData.utm_content.trim();
+      }
+      if (validatedData.referrer?.trim()) {
+        updateData.referrer = validatedData.referrer.trim();
+      }
+      
+      const { data: updatedLead, error: updateError } = await supabase
+        .from('leads')
+        .update(updateData)
+        .eq('id', existingLead.id)
+        .select()
+        .single();
+
+      if (updateError) {
+        console.error('[Leads API] Error updating existing lead:', updateError);
+        return serverErrorResponse('Failed to update existing lead', updateError.message);
+      }
+
+      console.log('[Leads API] Updated existing lead (duplicate prevented):', updatedLead.id);
+      return Response.json(successResponse(updatedLead), { status: 200 });
+    }
+
+    // No duplicate found, create new lead
     const { data, error } = await supabase
       .from('leads')
       .insert([

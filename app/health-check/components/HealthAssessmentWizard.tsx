@@ -144,6 +144,17 @@ export function HealthAssessmentWizard() {
     
     // Check if current question is answered
     const value = answers[currentQuestion.id];
+    
+    // Handle multiple choice questions (arrays)
+    if (currentQuestion.type === 'choice' && currentQuestion.multiple) {
+      if (!Array.isArray(value) || value.length === 0) {
+        setErrors(prev => ({ ...prev, [currentQuestion.id]: 'Please select at least one option' }));
+        return false;
+      }
+      return true;
+    }
+    
+    // Handle single value questions
     if (value === null || value === undefined || value === '') {
       setErrors(prev => ({ ...prev, [currentQuestion.id]: 'This field is required' }));
       return false;
