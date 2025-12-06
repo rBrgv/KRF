@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { formatDate, formatDateTime } from '@/lib/utils';
 import Link from 'next/link';
-import { X, Mail } from 'lucide-react';
+import { X, Mail, FileText, Download } from 'lucide-react';
 import { LeadEmailForm } from './LeadEmailForm';
+import { getQuestionById } from '@/lib/questions';
 
 interface Lead {
   id: string;
@@ -56,6 +57,28 @@ export function LeadDetail({ lead }: LeadDetailProps) {
     subscription_type: '',
     program_type: '',
   });
+  const [healthAssessment, setHealthAssessment] = useState<any>(null);
+  const [isLoadingAssessment, setIsLoadingAssessment] = useState(true);
+  const [showQuestions, setShowQuestions] = useState(false);
+
+  // Fetch health assessment for this lead
+  useEffect(() => {
+    const fetchAssessment = async () => {
+      try {
+        const response = await fetch(`/api/health-assessments/by-lead/${lead.id}`);
+        const data = await response.json();
+        if (data.success && data.assessment) {
+          setHealthAssessment(data.assessment);
+        }
+      } catch (error) {
+        console.error('Error fetching health assessment:', error);
+      } finally {
+        setIsLoadingAssessment(false);
+      }
+    };
+
+    fetchAssessment();
+  }, [lead.id]);
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -269,6 +292,161 @@ export function LeadDetail({ lead }: LeadDetailProps) {
             </div>
           </div>
         </div>
+
+        {/* Health Assessment Section */}
+        {!isLoadingAssessment && healthAssessment && (
+          <div className="mb-8 premium-card rounded-xl p-6 border border-purple-500/30">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+                <FileText className="w-5 h-5 text-purple-400" />
+                Health Assessment
+              </h2>
+              <Link
+                href={`/health-check?assessment=${healthAssessment.id}`}
+                className="text-sm text-purple-400 hover:text-purple-300 transition-colors"
+              >
+                View Full Report →
+              </Link>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div className="premium-card rounded-lg p-4 border border-gray-800/50">
+                <p className="text-sm text-gray-400 mb-1">Overall Score</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-white">{healthAssessment.overall_score}</span>
+                  <span className="text-gray-400">/100</span>
+                </div>
+                <p className={`text-sm mt-1 ${
+                  healthAssessment.category === 'excellent' ? 'text-green-400' :
+                  healthAssessment.category === 'good' ? 'text-blue-400' :
+                  healthAssessment.category === 'warning' ? 'text-yellow-400' :
+                  'text-red-400'
+                }`}>
+                  {healthAssessment.category === 'excellent' ? 'Excellent' :
+                   healthAssessment.category === 'good' ? 'Good' :
+                   healthAssessment.category === 'warning' ? 'Needs Attention' :
+                   'High Alert'}
+                </p>
+              </div>
+              
+              {healthAssessment.age_group && (
+                <div className="premium-card rounded-lg p-4 border border-gray-800/50">
+                  <p className="text-sm text-gray-400 mb-1">Age Group</p>
+                  <p className="text-lg font-semibold text-white">{healthAssessment.age_group} years</p>
+                </div>
+              )}
+              
+              {healthAssessment.bmi && (
+                <div className="premium-card rounded-lg p-4 border border-gray-800/50">
+                  <p className="text-sm text-gray-400 mb-1">BMI</p>
+                  <p className="text-lg font-semibold text-white">{healthAssessment.bmi}</p>
+                </div>
+              )}
+              
+              <div className="premium-card rounded-lg p-4 border border-gray-800/50">
+                <p className="text-sm text-gray-400 mb-1">Assessment Date</p>
+                <p className="text-sm font-semibold text-white">
+                  {formatDate(healthAssessment.created_at)}
+                </p>
+              </div>
+            </div>
+            
+            <div className="premium-card rounded-lg p-4 border border-gray-800/50">
+              <p className="text-sm text-gray-400 mb-3">Category Breakdown</p>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <div>
+                  <p className="text-xs text-gray-500">Physical</p>
+                  <p className="text-sm font-semibold text-white">{healthAssessment.physical_score}/25</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Lifestyle</p>
+                  <p className="text-sm font-semibold text-white">{healthAssessment.lifestyle_score}/15</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Nutrition</p>
+                  <p className="text-sm font-semibold text-white">{healthAssessment.nutrition_score}/15</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Mental</p>
+                  <p className="text-sm font-semibold text-white">{healthAssessment.mental_score}/20</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Pain & Mobility</p>
+                  <p className="text-sm font-semibold text-white">{healthAssessment.pain_mobility_score}/10</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Goal Readiness</p>
+                  <p className="text-sm font-semibold text-white">{healthAssessment.goal_readiness_score}/15</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Questions & Answers Section */}
+            {healthAssessment.raw_answers && (
+              <div className="mt-4">
+                <button
+                  onClick={() => setShowQuestions(!showQuestions)}
+                  className="w-full flex items-center justify-between px-4 py-3 bg-gray-800/50 hover:bg-gray-800 rounded-lg border border-gray-700 transition-colors"
+                >
+                  <span className="text-sm font-semibold text-white">
+                    {showQuestions ? 'Hide' : 'Show'} Questions & Answers
+                  </span>
+                  <span className="text-gray-400">{showQuestions ? '−' : '+'}</span>
+                </button>
+
+                {showQuestions && (
+                  <div className="mt-4 space-y-4">
+                    {Object.entries(healthAssessment.raw_answers).map(([questionId, answer]: [string, any]) => {
+                      // Skip non-question fields
+                      if (questionId === 'ageGroup' || questionId === 'physical_height' || questionId === 'physical_weight') {
+                        return null;
+                      }
+
+                      // Get question text from QUESTIONS array
+                      const question = getQuestionById(questionId);
+                      if (!question) return null;
+
+                      // Format answer
+                      let answerLabel = String(answer);
+                      if (question.type === 'choice' && question.choices) {
+                        const choice = question.choices.find((c: any) => c.value === answer);
+                        answerLabel = choice ? choice.label : answer;
+                      }
+
+                      // Map section to readable name
+                      const sectionNames: Record<string, string> = {
+                        physical: 'Physical Health',
+                        pain: 'Pain & Mobility',
+                        lifestyle: 'Lifestyle & Nutrition',
+                        mental: 'Mental Fitness',
+                        goal: 'Goal & Motivation',
+                      };
+
+                      return (
+                        <div key={questionId} className="premium-card rounded-lg p-4 border border-gray-800/50">
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-xs px-2 py-1 rounded bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                                  {sectionNames[question.section] || question.section}
+                                </span>
+                              </div>
+                              <p className="text-sm font-medium text-white mb-2">{question.question}</p>
+                              <p className="text-sm text-gray-300">
+                                <span className="text-gray-500">Answer: </span>
+                                <span className="font-semibold">{answerLabel}</span>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="mb-8 premium-card rounded-xl p-6 border border-gray-800/50">
           <h2 className="text-xl font-semibold mb-4 text-white">Status</h2>
