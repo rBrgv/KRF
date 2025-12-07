@@ -5,7 +5,7 @@ import { QUESTIONS, SECTIONS, getQuestionsBySection } from '@/lib/questions';
 import { QuestionRenderer } from './QuestionRenderer';
 import { ResultsView } from './ResultsView';
 import { AssessmentResult } from '@/lib/types/health-assessment';
-import { ArrowRight, ArrowLeft, Check, Download, AlertCircle } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Check, Download, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import { generatePDFReport } from '@/lib/pdf-generator';
 import { getRecommendations } from '@/lib/recommendations';
 
@@ -28,6 +28,7 @@ export function HealthAssessmentWizard() {
   const [isLookingUp, setIsLookingUp] = useState(false);
   const [lookupError, setLookupError] = useState('');
   const [foundAssessment, setFoundAssessment] = useState<AssessmentResult & { name?: string; phone?: string; email?: string | null; answers?: Record<string, any>; createdAt?: string } | null>(null);
+  const [showReturningCustomer, setShowReturningCustomer] = useState(false);
 
   const currentSection = SECTIONS[currentSectionIndex];
   const sectionQuestions = getQuestionsBySection(currentSection);
@@ -481,81 +482,62 @@ export function HealthAssessmentWizard() {
   // Landing Screen
   if (step === 'landing') {
     return (
-      <div className="premium-card rounded-2xl p-8 md:p-12 text-center">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
-          Health & Fitness Diagnostic
-        </h1>
-        <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-          Take our comprehensive health assessment to discover your personalized health score and receive expert recommendations tailored to your goals.
-        </p>
-        <div className="space-y-4 mb-8">
-          <div className="flex items-center justify-center gap-3 text-gray-300">
-            <Check className="w-5 h-5 text-green-400" />
-            <span>30+ questions across 5 key areas</span>
+      <div className="premium-card rounded-2xl p-6 sm:p-8 md:p-12 text-center border-2 border-red-500/30 bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-gray-900/95 backdrop-blur-sm shadow-2xl shadow-red-500/10 relative overflow-hidden">
+        {/* Premium background glow effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-red-600/5 via-transparent to-red-600/5 rounded-2xl pointer-events-none"></div>
+        
+        <div className="relative z-10 mb-6 sm:mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-red-600 via-red-700 to-red-800 mb-4 sm:mb-6 shadow-xl shadow-red-600/50 ring-2 ring-red-500/30">
+            <Check className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
           </div>
-          <div className="flex items-center justify-center gap-3 text-gray-300">
-            <Check className="w-5 h-5 text-green-400" />
-            <span>Personalized health score (0-100)</span>
-          </div>
-          <div className="flex items-center justify-center gap-3 text-gray-300">
-            <Check className="w-5 h-5 text-green-400" />
-            <span>Customized recommendations</span>
-          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-3 sm:mb-4 px-2">
+            <span className="bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
+              Discover Your Health Score
+            </span>
+          </h2>
+          <p className="text-base sm:text-lg text-gray-300 mb-6 sm:mb-8 max-w-xl mx-auto px-2 leading-relaxed">
+            Get your personalized health assessment in under 60 seconds. 
+            Receive expert recommendations tailored to your goals.
+          </p>
         </div>
         
-        {/* Returning Customer Lookup */}
-        {!foundAssessment && (
-          <div className="mb-6 p-4 bg-blue-900/30 border border-blue-600/50 rounded-lg">
-            <p className="text-blue-300 mb-3 font-semibold">
-              Returning Customer? Download Your Previous Assessment
-            </p>
-            <form onSubmit={handleLookupAssessment} className="space-y-3">
-              <div className="flex flex-col sm:flex-row gap-3">
-                <input
-                  type="email"
-                  value={lookupInfo.email}
-                  onChange={(e) => {
-                    setLookupInfo(prev => ({ ...prev, email: e.target.value }));
-                    setLookupError('');
-                  }}
-                  placeholder="Enter your email"
-                  className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <span className="text-gray-400 self-center">OR</span>
-                <input
-                  type="tel"
-                  value={lookupInfo.phone}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, '').slice(0, 10);
-                    setLookupInfo(prev => ({ ...prev, phone: value }));
-                    setLookupError('');
-                  }}
-                  placeholder="Enter your phone"
-                  maxLength={10}
-                  className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <button
-                  type="submit"
-                  disabled={isLookingUp}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isLookingUp ? 'Checking...' : 'Find My Assessment'}
-                </button>
+        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mb-6 sm:mb-8">
+          <div className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-xl p-5 sm:p-6 border border-gray-700/50 hover:border-red-500/30 transition-all hover:shadow-lg hover:shadow-red-500/10">
+            <div className="text-center mb-2">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-600/20 border border-red-500/30 mb-3">
+                <span className="text-red-400 font-bold text-xl">12</span>
               </div>
-              {lookupError && (
-                <p className="text-red-400 text-sm">{lookupError}</p>
-              )}
-            </form>
+              <span className="text-white font-bold text-lg block">Questions</span>
+            </div>
+            <p className="text-sm text-gray-400">Quick & Easy</p>
           </div>
-        )}
+          <div className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-xl p-5 sm:p-6 border border-gray-700/50 hover:border-red-500/30 transition-all hover:shadow-lg hover:shadow-red-500/10">
+            <div className="text-center mb-2">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-600/20 border border-red-500/30 mb-3">
+                <span className="text-red-400 font-bold text-xl">⚡</span>
+              </div>
+              <span className="text-white font-bold text-lg block">Instant Score</span>
+            </div>
+            <p className="text-sm text-gray-400">0-100 Rating</p>
+          </div>
+          <div className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-xl p-5 sm:p-6 border border-gray-700/50 hover:border-red-500/30 transition-all hover:shadow-lg hover:shadow-red-500/10">
+            <div className="text-center mb-2">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-600/20 border border-red-500/30 mb-3">
+                <span className="text-red-400 font-bold text-xl">★</span>
+              </div>
+              <span className="text-white font-bold text-lg block">Expert Tips</span>
+            </div>
+            <p className="text-sm text-gray-400">Personalized</p>
+          </div>
+        </div>
 
         {/* Found Assessment Display */}
         {foundAssessment && (
-          <div className="mb-6 p-4 bg-green-900/30 border border-green-600/50 rounded-lg">
-            <p className="text-green-300 mb-2 font-semibold">
+          <div className="mb-6 p-4 sm:p-5 bg-green-900/30 border border-green-600/50 rounded-lg">
+            <p className="text-green-300 mb-2 font-semibold text-sm sm:text-base">
               Assessment Found!
             </p>
-            <p className="text-gray-300 text-sm mb-3">
+            <p className="text-gray-300 text-xs sm:text-sm mb-3">
               Completed on {foundAssessment.createdAt 
                 ? new Date(foundAssessment.createdAt).toLocaleDateString('en-IN', {
                     year: 'numeric',
@@ -564,12 +546,12 @@ export function HealthAssessmentWizard() {
                   })
                 : 'a previous date'} - Score: {foundAssessment.scores.overall}/100
             </p>
-            <div className="flex gap-3 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={handleDownloadFoundReport}
-                className="inline-flex items-center gap-2 px-6 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 active:bg-green-800 transition-all min-h-[48px] text-sm sm:text-base"
               >
-                <Download className="w-4 h-4" />
+                <Download className="w-4 h-4 sm:w-5 sm:h-5" />
                 Download PDF Report
               </button>
               <button
@@ -578,7 +560,7 @@ export function HealthAssessmentWizard() {
                   setLookupInfo({ email: '', phone: '' });
                   setLookupError('');
                 }}
-                className="px-6 py-2 bg-gray-700 text-white rounded-lg font-semibold hover:bg-gray-600 transition-all"
+                className="px-6 py-3 bg-gray-700 text-white rounded-lg font-semibold hover:bg-gray-600 active:bg-gray-500 transition-all min-h-[48px] text-sm sm:text-base"
               >
                 Lookup Another
               </button>
@@ -588,20 +570,20 @@ export function HealthAssessmentWizard() {
 
         {/* Saved Progress */}
         {hasSavedProgress && !foundAssessment && (
-          <div className="mb-6 p-4 bg-yellow-900/30 border border-yellow-600/50 rounded-lg">
-            <p className="text-yellow-300 mb-3">
+          <div className="mb-6 p-4 sm:p-5 bg-yellow-900/30 border border-yellow-600/50 rounded-lg">
+            <p className="text-yellow-300 mb-3 text-sm sm:text-base">
               You have a saved assessment in progress. Would you like to resume?
             </p>
-            <div className="flex gap-3 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={handleResume}
-                className="px-6 py-2 bg-yellow-600 text-white rounded-lg font-semibold hover:bg-yellow-700 transition-all"
+                className="px-6 py-3 bg-yellow-600 text-white rounded-lg font-semibold hover:bg-yellow-700 active:bg-yellow-800 transition-all min-h-[48px] text-sm sm:text-base"
               >
                 Resume Assessment
               </button>
               <button
                 onClick={handleStartNew}
-                className="px-6 py-2 bg-gray-700 text-white rounded-lg font-semibold hover:bg-gray-600 transition-all"
+                className="px-6 py-3 bg-gray-700 text-white rounded-lg font-semibold hover:bg-gray-600 active:bg-gray-500 transition-all min-h-[48px] text-sm sm:text-base"
               >
                 Start Fresh
               </button>
@@ -611,12 +593,84 @@ export function HealthAssessmentWizard() {
         
         {/* Start New Assessment */}
         {!hasSavedProgress && !foundAssessment && (
-          <button
-            onClick={() => setStep('assessment')}
-            className="px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg font-semibold text-lg hover:from-red-700 hover:to-red-800 transition-all shadow-lg shadow-red-600/50 hover:scale-105"
-          >
-            Start Assessment
-          </button>
+          <div className="relative z-10 mt-6 sm:mt-8">
+            <button
+              onClick={() => setStep('assessment')}
+              className="group relative w-full sm:w-auto inline-flex items-center justify-center rounded-full bg-gradient-to-r from-red-600 via-red-700 to-red-800 px-10 sm:px-14 py-4 sm:py-5 text-base sm:text-lg font-bold text-white overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(220,38,38,0.5)] hover:shadow-[0_0_60px_rgba(220,38,38,0.7)] min-h-[56px] sm:min-h-[60px]"
+            >
+              <span className="relative z-10 flex items-center gap-3">
+                Start Free Assessment
+                <ArrowRight className="w-5 h-5 sm:w-6 sm:h-5" />
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-red-700 via-red-800 to-red-900 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </button>
+            <p className="text-xs sm:text-sm text-gray-400 mt-4 sm:mt-5 px-2">
+              No credit card required • 100% Free • Takes less than 60 seconds
+            </p>
+          </div>
+        )}
+
+        {/* Returning Customer Lookup - Collapsible */}
+        {!foundAssessment && (
+          <div className="mt-6">
+            <button
+              onClick={() => setShowReturningCustomer(!showReturningCustomer)}
+              className="w-full flex items-center justify-between p-3.5 sm:p-4 bg-gray-800/50 border border-gray-700/50 rounded-lg hover:bg-gray-800/70 active:bg-gray-800/80 transition-all text-left min-h-[48px]"
+            >
+              <span className="text-xs sm:text-sm text-gray-300 font-medium pr-2">
+                Returning Customer? Download Your Previous Assessment
+              </span>
+              {showReturningCustomer ? (
+                <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
+              ) : (
+                <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
+              )}
+            </button>
+            
+            {showReturningCustomer && (
+              <div className="mt-3 p-4 bg-gray-800/30 border border-gray-700/50 rounded-lg">
+                <form onSubmit={handleLookupAssessment} className="space-y-3">
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <input
+                      type="email"
+                      value={lookupInfo.email}
+                      onChange={(e) => {
+                        setLookupInfo(prev => ({ ...prev, email: e.target.value }));
+                        setLookupError('');
+                      }}
+                      placeholder="Enter your email"
+                      className="flex-1 px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base min-h-[48px]"
+                    />
+                    <span className="text-gray-500 self-center text-sm sm:hidden">OR</span>
+                    <span className="hidden sm:block text-gray-500 self-center text-sm">OR</span>
+                    <input
+                      type="tel"
+                      value={lookupInfo.phone}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, '').slice(0, 10);
+                        setLookupInfo(prev => ({ ...prev, phone: value }));
+                        setLookupError('');
+                      }}
+                      placeholder="Enter your phone"
+                      maxLength={10}
+                      className="flex-1 px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base min-h-[48px]"
+                    />
+                    <button
+                      type="submit"
+                      disabled={isLookingUp}
+                      className="w-full sm:w-auto px-4 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 active:bg-blue-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-base min-h-[48px]"
+                    >
+                      {isLookingUp ? 'Checking...' : 'Find'}
+                    </button>
+                  </div>
+                  {lookupError && (
+                    <p className="text-red-400 text-sm">{lookupError}</p>
+                  )}
+                </form>
+              </div>
+            )}
+          </div>
         )}
       </div>
     );
@@ -633,24 +687,24 @@ export function HealthAssessmentWizard() {
     };
 
     return (
-      <div className="premium-card rounded-2xl p-6 md:p-8">
+      <div className="premium-card rounded-2xl p-5 sm:p-6 md:p-8 border-2 border-red-500/20 bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-sm">
         {/* Progress Bar */}
-        <div className="mb-6">
-          <div className="flex justify-between text-sm text-gray-400 mb-2">
+        <div className="mb-5 sm:mb-6">
+          <div className="flex justify-between text-xs sm:text-sm text-gray-400 mb-2">
             <span>Section {currentSectionIndex + 1} of {SECTIONS.length}</span>
             <span>{Math.round(progress)}% Complete</span>
           </div>
-          <div className="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
+          <div className="w-full bg-gray-800 rounded-full h-2 sm:h-2.5 overflow-hidden">
             <div
               className="bg-gradient-to-r from-red-600 to-red-700 h-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className="text-white font-semibold mt-2">{sectionLabels[currentSection]}</p>
+          <p className="text-white font-semibold mt-2 text-sm sm:text-base">{sectionLabels[currentSection]}</p>
         </div>
 
         {/* Question */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <QuestionRenderer
             question={currentQuestion}
             value={answers[currentQuestion.id]}
@@ -660,14 +714,15 @@ export function HealthAssessmentWizard() {
         </div>
 
         {/* Navigation */}
-        <div className="flex justify-between gap-4">
+        <div className="flex justify-between gap-3 sm:gap-4">
           <button
             onClick={handlePrevious}
             disabled={currentSectionIndex === 0 && currentQuestionIndex === 0}
-            className="flex items-center gap-2 px-6 py-3 bg-gray-800 text-white rounded-lg font-semibold hover:bg-gray-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-3.5 bg-gray-800 text-white rounded-lg font-semibold hover:bg-gray-700 active:bg-gray-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px] text-sm sm:text-base flex-1 sm:flex-initial"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Previous
+            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Previous</span>
+            <span className="sm:hidden">Prev</span>
           </button>
           <button
             type="button"
@@ -675,12 +730,14 @@ export function HealthAssessmentWizard() {
               e.preventDefault();
               handleNext();
             }}
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg font-semibold hover:from-red-700 hover:to-red-800 transition-all"
+            className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-3.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg font-semibold hover:from-red-700 hover:to-red-800 active:from-red-800 active:to-red-900 transition-all min-h-[48px] text-sm sm:text-base flex-1 sm:flex-initial"
           >
-            {currentSectionIndex === SECTIONS.length - 1 && currentQuestionIndex === sectionQuestions.length - 1
-              ? 'Continue'
-              : 'Next'}
-            <ArrowRight className="w-4 h-4" />
+            <span>
+              {currentSectionIndex === SECTIONS.length - 1 && currentQuestionIndex === sectionQuestions.length - 1
+                ? 'Continue'
+                : 'Next'}
+            </span>
+            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
       </div>
@@ -690,13 +747,20 @@ export function HealthAssessmentWizard() {
   // Lead Capture Screen
   if (step === 'lead-capture') {
     return (
-      <div className="premium-card rounded-2xl p-6 md:p-8">
-        <h2 className="text-3xl font-extrabold text-white mb-2">Almost There!</h2>
-        <p className="text-gray-300 mb-8">
-          Enter your details to receive your personalized health assessment results.
-        </p>
+      <div className="premium-card rounded-2xl p-5 sm:p-6 md:p-8 border-2 border-red-500/20 bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-sm">
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-red-600 to-red-700 mb-3 sm:mb-4 shadow-lg shadow-red-600/50">
+            <Check className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+          </div>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-2 sm:mb-3 px-2">
+            Almost There!
+          </h2>
+          <p className="text-base sm:text-lg text-gray-300 max-w-xl mx-auto px-2">
+            Enter your details to receive your personalized health assessment results and expert recommendations.
+          </p>
+        </div>
 
-        <form onSubmit={handleLeadSubmit} className="space-y-6">
+        <form onSubmit={handleLeadSubmit} className="space-y-4 sm:space-y-6">
           <div>
             <label className="block text-white font-semibold mb-2">
               Name <span className="text-red-400">*</span>
@@ -714,7 +778,7 @@ export function HealthAssessmentWizard() {
                   });
                 }
               }}
-              className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
+              className={`w-full px-4 py-3.5 sm:py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 text-base min-h-[48px] ${
                 errors.name ? 'border-red-500' : 'border-gray-700'
               }`}
               placeholder="Enter your name"
@@ -746,7 +810,7 @@ export function HealthAssessmentWizard() {
                   });
                 }
               }}
-              className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
+              className={`w-full px-4 py-3.5 sm:py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 text-base min-h-[48px] ${
                 errors.phone ? 'border-red-500' : 'border-gray-700'
               }`}
               placeholder="Enter your 10-digit phone number"
@@ -778,7 +842,7 @@ export function HealthAssessmentWizard() {
                 }
               }}
               required
-              className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
+              className={`w-full px-4 py-3.5 sm:py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 text-base min-h-[48px] ${
                 errors.email ? 'border-red-500' : 'border-gray-700'
               }`}
               placeholder="Enter your email"
@@ -807,7 +871,7 @@ export function HealthAssessmentWizard() {
                   });
                 }
               }}
-              className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
+              className={`w-full px-4 py-3.5 sm:py-3 bg-gray-800 border rounded-lg text-white focus:ring-2 focus:ring-red-500 focus:border-red-500 text-base min-h-[48px] ${
                 errors.ageGroup ? 'border-red-500' : 'border-gray-700'
               }`}
             >
@@ -844,7 +908,7 @@ export function HealthAssessmentWizard() {
                 }
               }}
               rows={4}
-              className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none ${
+              className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none text-base ${
                 errors.goal ? 'border-red-500' : 'border-gray-700'
               }`}
               placeholder="Tell us about your fitness goals..."
@@ -857,20 +921,28 @@ export function HealthAssessmentWizard() {
             )}
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <button
               type="button"
               onClick={() => setStep('assessment')}
-              className="flex-1 px-6 py-3 bg-gray-800 text-white rounded-lg font-semibold hover:bg-gray-700 transition-all"
+              className="w-full sm:flex-1 px-6 py-3.5 sm:py-3 bg-gray-800 text-white rounded-lg font-semibold hover:bg-gray-700 active:bg-gray-600 transition-all min-h-[48px] text-base"
             >
               Back
             </button>
             <button
               type="submit"
               disabled={isSubmitting || isChecking}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg font-semibold hover:from-red-700 hover:to-red-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group relative w-full sm:flex-1 px-6 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-full font-semibold text-base sm:text-lg hover:from-red-700 hover:to-red-800 active:from-red-800 active:to-red-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:shadow-[0_0_30px_rgba(220,38,38,0.5)] active:scale-95 min-h-[48px]"
             >
-              {isChecking ? 'Checking...' : isSubmitting ? 'Processing...' : 'Get My Results'}
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                {isChecking ? 'Checking...' : isSubmitting ? 'Processing...' : (
+                  <>
+                    Get My Results
+                    <ArrowRight className="w-5 h-5" />
+                  </>
+                )}
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800 opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </button>
           </div>
         </form>

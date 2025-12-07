@@ -64,7 +64,7 @@ export default function HealthCheckPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -72,9 +72,13 @@ export default function HealthCheckPage() {
         }}
       />
       <HealthCheckTracker />
-      <div className="max-w-4xl mx-auto">
-        <HealthAssessmentWizard />
-      </div>
+      
+      {/* Assessment Wizard - Shown Immediately */}
+      <section className="relative py-8 sm:py-12 px-4 sm:px-6">
+        <div className="max-w-4xl mx-auto">
+          <HealthAssessmentWizard />
+        </div>
+      </section>
     </div>
   );
 }
