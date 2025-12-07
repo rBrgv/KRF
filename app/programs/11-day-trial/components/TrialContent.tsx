@@ -26,6 +26,17 @@ export function TrialContent({ pdfPath }: TrialContentProps) {
     }, 500);
   };
 
+  const handleDownloadPDF = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // On mobile, especially iOS, the download attribute doesn't work well
+    // Open in new tab/window instead
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      e.preventDefault();
+      window.open(pdfPath, '_blank');
+    }
+    // On desktop, let the browser handle the download normally
+  };
+
   return (
     <div className="min-h-screen bg-gray-900">
       {/* Hero Section */}
@@ -157,7 +168,8 @@ export function TrialContent({ pdfPath }: TrialContentProps) {
                 <a
                   href={pdfPath}
                   download
-                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 text-base font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-300 shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:shadow-[0_0_30px_rgba(220,38,38,0.4)]"
+                  onClick={handleDownloadPDF}
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 sm:py-3.5 text-base font-semibold hover:from-red-700 hover:to-red-800 active:from-red-800 active:to-red-900 transition-all duration-300 shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:shadow-[0_0_30px_rgba(220,38,38,0.4)] min-h-[48px]"
                 >
                   <Download className="w-5 h-5" />
                   Download PDF Guide
@@ -167,7 +179,8 @@ export function TrialContent({ pdfPath }: TrialContentProps) {
 
             <ScrollAnimation>
               <div className="premium-card rounded-2xl p-4 md:p-8 overflow-hidden">
-                <div className="w-full h-[600px] md:h-[800px] rounded-lg overflow-hidden border border-gray-700">
+                {/* Desktop PDF Viewer */}
+                <div className="hidden md:block w-full h-[800px] rounded-lg overflow-hidden border border-gray-700">
                   <iframe
                     src={`${pdfPath}#toolbar=0&navpanes=0&scrollbar=1`}
                     className="w-full h-full"
@@ -175,17 +188,42 @@ export function TrialContent({ pdfPath }: TrialContentProps) {
                     style={{ border: "none" }}
                   />
                 </div>
-                <div className="mt-6 text-center">
-                  <p className="text-sm text-gray-400 mb-4">
-                    Having trouble viewing?{" "}
-                    <a
-                      href={pdfPath}
-                      download
-                      className="text-red-400 hover:text-red-300 font-semibold underline"
-                    >
-                      Download the PDF
-                    </a>{" "}
-                    to view on your device
+                
+                {/* Mobile Download Section */}
+                <div className="md:hidden text-center py-8">
+                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-red-600/20 border border-red-500/30 mb-6">
+                    <Download className="w-10 h-10 text-red-400" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-3">
+                    Download Your Guide
+                  </h3>
+                  <p className="text-gray-300 mb-6 text-sm">
+                    Download the PDF to view on your mobile device
+                  </p>
+                  <a
+                    href={pdfPath}
+                    download
+                    onClick={handleDownloadPDF}
+                    className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-full font-semibold hover:from-red-700 hover:to-red-800 active:from-red-800 active:to-red-900 transition-all shadow-lg shadow-red-600/50 hover:shadow-xl hover:shadow-red-600/60 min-h-[56px] text-base w-full sm:w-auto"
+                  >
+                    <Download className="w-6 h-6" />
+                    Download PDF Guide
+                  </a>
+                </div>
+                
+                {/* Desktop Download Button */}
+                <div className="hidden md:block mt-6 text-center">
+                  <a
+                    href={pdfPath}
+                    download
+                    onClick={handleDownloadPDF}
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-full font-semibold hover:from-red-700 hover:to-red-800 transition-all shadow-lg shadow-red-600/50 hover:shadow-xl hover:shadow-red-600/60 min-h-[48px]"
+                  >
+                    <Download className="w-5 h-5" />
+                    Download PDF Guide
+                  </a>
+                  <p className="text-sm text-gray-400 mt-3">
+                    Having trouble viewing? Download to view offline
                   </p>
                 </div>
               </div>
