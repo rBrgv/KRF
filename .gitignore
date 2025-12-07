@@ -35,3 +35,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# large media files
+*.mp4
+*.mov
+*.avi
+*.mkv
+

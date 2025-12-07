@@ -72,3 +72,4 @@ WHERE age_group IS NOT NULL;
 -- Add comment
 COMMENT ON COLUMN health_assessments.age_group IS 'Age group of the assessment taker (e.g., 18-25, 26-35, etc.)';
 
+

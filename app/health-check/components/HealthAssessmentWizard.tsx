@@ -105,7 +105,7 @@ export function HealthAssessmentWizard() {
 
   const validateEmail = (email: string): string | null => {
     if (!email.trim()) {
-      return null; // Email is optional
+      return 'Email is required';
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email.trim())) {
@@ -448,7 +448,11 @@ export function HealthAssessmentWizard() {
         localStorage.removeItem(STORAGE_KEY);
       }
 
-      setResult(data.data);
+      // Include goal from leadInfo in the result
+      setResult({
+        ...data.data,
+        goal: leadInfo.goal,
+      });
       setStep('results');
     } catch (error: any) {
       console.error('Error submitting assessment:', error);
@@ -742,7 +746,7 @@ export function HealthAssessmentWizard() {
 
           <div>
             <label className="block text-white font-semibold mb-2">
-              Email <span className="text-gray-400 text-sm">(Optional)</span>
+              Email <span className="text-red-400">*</span>
             </label>
             <input
               type="email"
@@ -757,6 +761,7 @@ export function HealthAssessmentWizard() {
                   });
                 }
               }}
+              required
               className={`w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
                 errors.email ? 'border-red-500' : 'border-gray-700'
               }`}

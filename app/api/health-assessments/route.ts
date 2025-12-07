@@ -15,7 +15,7 @@ const healthAssessmentSchema = z.object({
   phone: z.string()
     .length(10, 'Phone must be exactly 10 digits')
     .regex(/^[6-9]\d{9}$/, 'Phone number must start with 6, 7, 8, or 9'),
-  email: z.string().email('Invalid email address').optional().or(z.literal('')),
+  email: z.string().email('Invalid email address').min(1, 'Email is required'),
   goal: z.string().optional().or(z.literal('')), // Add goal field (optional for backward compatibility)
   ageGroup: z.string().min(1, 'Age group is required'),
   answers: z.record(z.any()),
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     const insertData = {
       name: validated.name.trim(),
       phone: validated.phone.trim(),
-      email: validated.email?.trim() || null,
+      email: validated.email.trim(),
       age_group: validated.ageGroup,
       height_cm: heightCm,
       weight_kg: weightKg,
@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
       const { isDuplicate, existingLead } = await checkDuplicateLead(
         supabase,
         validated.phone.trim(),
-        validated.email?.trim() || null
+        validated.email.trim()
       );
 
       if (isDuplicate && existingLead) {
@@ -151,7 +151,7 @@ export async function POST(request: NextRequest) {
             source: mergedSource,
             goal: mergedGoal || existingLead.goal,
             // Update email if it was missing
-            email: existingLead.email || validated.email?.trim() || null,
+            email: existingLead.email || validated.email.trim(),
             updated_at: new Date().toISOString(),
           })
           .eq('id', existingLead.id);
@@ -174,7 +174,7 @@ export async function POST(request: NextRequest) {
             {
               name: validated.name.trim(),
               phone: validated.phone.trim(),
-              email: validated.email?.trim() || null,
+              email: validated.email.trim(),
               goal: goal,
               source: 'health_assessment',
               status: 'new',

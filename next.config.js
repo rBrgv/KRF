@@ -1,5 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  webpack: (config, { isServer }) => {
+    // Exclude pdfjs-dist from bundling (we load it from CDN)
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        canvas: false,
+        'pdfjs-dist': false,
+      };
+      
+      // Externalize pdfjs-dist to prevent bundling
+      config.externals = config.externals || [];
+      if (Array.isArray(config.externals)) {
+        config.externals.push('pdfjs-dist');
+      } else {
+        config.externals = [config.externals, 'pdfjs-dist'];
+      }
+    }
+    return config;
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [

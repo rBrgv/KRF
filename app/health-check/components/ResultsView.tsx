@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Download } from 'lucide-react';
+import { Download, ArrowRight } from 'lucide-react';
 import { AssessmentResult } from '@/lib/types/health-assessment';
 import { getOverallCategory } from '@/lib/recommendations';
 import { generatePDFReport } from '@/lib/pdf-generator';
@@ -11,6 +11,7 @@ interface ResultsViewProps {
     name?: string;
     phone?: string;
     email?: string | null;
+    goal?: string;
     answers?: Record<string, any>;
   };
 }
@@ -100,6 +101,53 @@ export function ResultsView({ result }: ResultsViewProps) {
             </li>
           ))}
         </ul>
+      </div>
+      
+      {/* 11 Days Free Trial Promotion */}
+      <div className="premium-card rounded-2xl p-8 border-2 border-green-500/50 bg-gradient-to-br from-green-900/20 to-emerald-900/20">
+        <div className="text-center mb-6">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-green-500/20 border border-green-500/30 text-xs font-semibold uppercase tracking-wider text-green-400 mb-4">
+            Free Trial • Zero Commitment
+          </span>
+          <h3 className="text-3xl md:text-4xl font-extrabold text-white mb-3">
+            Start Your Transformation Journey
+          </h3>
+          <p className="text-lg text-gray-300 mb-6 max-w-2xl mx-auto">
+            Perfect for people who are <span className="text-green-400 font-semibold">confused, stuck, or scared to start</span>. 
+            This 11-day free trial removes all barriers and helps you activate your fitness genes.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="bg-gray-800/50 rounded-lg p-4 text-center">
+            <p className="text-green-400 font-semibold mb-1">Daily 15–20 Min Tasks</p>
+            <p className="text-sm text-gray-400">Mindset, fitness, breathing, and habits</p>
+          </div>
+          <div className="bg-gray-800/50 rounded-lg p-4 text-center">
+            <p className="text-green-400 font-semibold mb-1">11 Days Habit Blueprint</p>
+            <p className="text-sm text-gray-400">Transform your habits and build consistency</p>
+          </div>
+          <div className="bg-gray-800/50 rounded-lg p-4 text-center">
+            <p className="text-green-400 font-semibold mb-1">Workshop Access</p>
+            <p className="text-sm text-gray-400">Get access to the full workshop after completion</p>
+          </div>
+        </div>
+        
+        <div className="text-center">
+          <Link
+            href={`/programs/11-day-trial?${new URLSearchParams({
+              ...(result.name && { name: result.name }),
+              ...(result.phone && { phone: result.phone }),
+              ...(result.email && { email: result.email }),
+              ...(result.goal && { goal: result.goal }),
+              from: 'health-check',
+            } as Record<string, string>).toString()}`}
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg font-semibold text-lg hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg shadow-green-600/50 hover:scale-105"
+          >
+            Start Free 11-Day Trial
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+        </div>
       </div>
       
       {/* CTA */}

@@ -1,0 +1,13 @@
+Backup Date: Sun Nov 30 22:06:49 IST 2025
+Source: https://krfitnessstudio.com
+Backup Type: Main Pages Only
+
+Pages backed up:
+- Homepage (index.html)
+- About Us
+- Services
+- Transformation
+- Contact
+
+Note: This is a simplified backup of main HTML pages.
+For a complete backup including all assets, run the download-site.js script.

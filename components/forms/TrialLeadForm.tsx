@@ -35,6 +35,12 @@ export function TrialLeadForm({ onSuccess, className }: TrialLeadFormProps) {
     // Read referrer
     const referrer = typeof window !== 'undefined' ? document.referrer : '';
 
+    // Read user details from URL (if coming from health check)
+    const name = searchParams.get('name') || '';
+    const phone = searchParams.get('phone') || '';
+    const email = searchParams.get('email') || '';
+    const goal = searchParams.get('goal') || '';
+
     setFormData((prev) => ({
       ...prev,
       utm_source: utmSource,
@@ -42,6 +48,11 @@ export function TrialLeadForm({ onSuccess, className }: TrialLeadFormProps) {
       utm_campaign: utmCampaign,
       utm_content: utmContent,
       referrer: referrer,
+      // Pre-fill form if coming from health check
+      ...(name && { name }),
+      ...(phone && { phone }),
+      ...(email && { email }),
+      ...(goal && { goal }),
     }));
   }, [searchParams]);
 
