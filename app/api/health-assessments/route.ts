@@ -5,6 +5,7 @@ import { getOverallCategory, getRecommendations } from '@/lib/recommendations';
 import { successResponse, validationErrorResponse, serverErrorResponse } from '@/lib/api/response';
 import { checkDuplicateLead, mergeSources, mergeGoals } from '@/lib/leads/duplicate-check';
 import { formatDate } from '@/lib/utils';
+import { trackLead } from '@/lib/metaConversionsApi';
 import { z } from 'zod';
 
 // Validation schema
@@ -205,6 +206,30 @@ export async function POST(request: NextRequest) {
     } catch (leadErr) {
       console.error('[Health Assessments API] Error in lead creation process:', leadErr);
       // Continue even if lead creation fails
+    }
+    
+    // Track Lead event via Conversions API (non-blocking)
+    try {
+      const origin = request.headers.get('origin') || request.headers.get('referer') || '';
+      const fullUrl = origin ? `${origin}/health-check` : undefined;
+      
+      await trackLead(
+        {
+          content_name: 'Health Check Lead',
+          value: 0,
+          currency: 'INR',
+          url: fullUrl,
+        },
+        request,
+        {
+          email: validated.email.trim(),
+          phone: validated.phone.trim(),
+          name: validated.name.trim(),
+        }
+      );
+    } catch (trackingError) {
+      // Don't fail the request if tracking fails
+      console.warn('[Health Assessments API] Meta Conversions API tracking error:', trackingError);
     }
     
     // Return result

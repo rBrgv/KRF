@@ -8,6 +8,7 @@ import { AssessmentResult } from '@/lib/types/health-assessment';
 import { ArrowRight, ArrowLeft, Check, Download, AlertCircle } from 'lucide-react';
 import { generatePDFReport } from '@/lib/pdf-generator';
 import { getRecommendations } from '@/lib/recommendations';
+import { trackLead } from '@/lib/metaPixel';
 
 type WizardStep = 'landing' | 'assessment' | 'lead-capture' | 'results' | 'existing-assessment';
 
@@ -446,6 +447,18 @@ export function HealthAssessmentWizard() {
       // Clear saved progress on successful submission
       if (typeof window !== 'undefined') {
         localStorage.removeItem(STORAGE_KEY);
+      }
+
+      // Track Lead event for Meta Pixel (non-blocking)
+      try {
+        trackLead({
+          content_name: 'Health Check Lead',
+          value: 0,
+          currency: 'INR',
+        });
+      } catch (error) {
+        // Silently fail - don't block form submission if tracking fails
+        console.warn('[Health Assessment] Meta Pixel tracking error:', error);
       }
 
       // Include goal from leadInfo in the result

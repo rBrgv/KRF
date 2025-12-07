@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { FloatingButtons } from "@/components/FloatingButtons";
 import { BackToTop } from "@/components/BackToTop";
+import { MetaPixel } from "@/components/MetaPixel";
+import { META_PIXEL_ID, META_PIXEL_TEST_CODE } from "@/lib/metaPixel";
 
 export const metadata: Metadata = {
   title: "KR Fitness - Best Gym in Bangalore | Gym Near Me | Online Gym Training",
@@ -205,8 +208,41 @@ export default function RootLayout({
             }),
           }}
         />
+        {/* Meta Pixel Base Code */}
+        {META_PIXEL_ID && (
+          <>
+            <Script
+              id="facebook-pixel"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  !function(f,b,e,v,n,t,s)
+                  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                  n.queue=[];t=b.createElement(e);t.async=!0;
+                  t.src=v;s=b.getElementsByTagName(e)[0];
+                  s.parentNode.insertBefore(t,s)}(window, document,'script',
+                  'https://connect.facebook.net/en_US/fbevents.js');
+                  fbq('init', '${META_PIXEL_ID}'${META_PIXEL_TEST_CODE ? `, {test_event_code: '${META_PIXEL_TEST_CODE}'}` : ''});
+                  fbq('track', 'PageView');
+                `,
+              }}
+            />
+            <noscript>
+              <img
+                height="1"
+                width="1"
+                style={{ display: 'none' }}
+                src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
+                alt=""
+              />
+            </noscript>
+          </>
+        )}
       </head>
       <body className="min-h-screen bg-gray-950 text-gray-100 antialiased">
+        <MetaPixel />
         <div className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black">
           <Navbar />
           <main>{children}</main>

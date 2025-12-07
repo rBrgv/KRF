@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { HealthAssessmentWizard } from './components/HealthAssessmentWizard';
+import { HealthCheckTracker } from './components/HealthCheckTracker';
 
 export const metadata: Metadata = {
   title: 'Health & Fitness Diagnostic - KR Fitness',
@@ -70,6 +71,7 @@ export default function HealthCheckPage() {
           __html: JSON.stringify(faqSchema),
         }}
       />
+      <HealthCheckTracker />
       <div className="max-w-4xl mx-auto">
         <HealthAssessmentWizard />
       </div>
