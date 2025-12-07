@@ -10,12 +10,18 @@
 // Declare fbq function for TypeScript
 declare global {
   interface Window {
-    fbq: (
-      action: 'init' | 'track' | 'trackCustom',
-      eventName: string,
-      params?: Record<string, any>
-    ) => void;
-    _fbq: typeof window.fbq;
+    fbq: {
+      (
+        action: 'init' | 'track' | 'trackCustom',
+        eventName: string,
+        params?: Record<string, any>
+      ): void;
+      loaded?: boolean;
+      queue?: any[];
+      callMethod?: (...args: any[]) => void;
+      push?: (...args: any[]) => void;
+    };
+    _fbq?: typeof window.fbq;
   }
 }
 
@@ -43,7 +49,7 @@ export const META_PIXEL_TEST_CODE = process.env.NEXT_PUBLIC_META_PIXEL_TEST_CODE
  * Check if Meta Pixel is configured
  */
 export const isMetaPixelEnabled = (): boolean => {
-  return typeof window !== 'undefined' && !!META_PIXEL_ID && typeof window.fbq === 'function';
+  return typeof window !== 'undefined' && !!META_PIXEL_ID && !!window.fbq && typeof window.fbq === 'function';
 };
 
 /**
