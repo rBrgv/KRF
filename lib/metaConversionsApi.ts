@@ -68,10 +68,11 @@ export const getUserAgent = (request: Request): string => {
 
 /**
  * Create user data object for Conversions API
+ * Meta expects hashed values for PII (email, phone)
  */
 export interface UserData {
-  email?: string;
-  phone?: string;
+  em?: string; // Hashed email (SHA-256)
+  ph?: string; // Hashed phone (SHA-256)
   client_ip_address?: string;
   client_user_agent?: string;
   fbp?: string; // Facebook browser ID (from cookie)

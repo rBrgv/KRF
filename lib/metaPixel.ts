@@ -22,8 +22,16 @@ declare global {
 /**
  * Meta Pixel ID from environment variable
  * Falls back to empty string if not set (will skip initialization)
+ * 
+ * Note: In production, this must be set in Vercel environment variables
+ * and the app must be redeployed after adding it.
  */
 export const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || '';
+
+// Log in development to help debug
+if (typeof window === 'undefined' && process.env.NODE_ENV === 'development') {
+  console.log('[Meta Pixel] META_PIXEL_ID:', META_PIXEL_ID || 'NOT SET');
+}
 
 /**
  * Test Event Code for Meta Pixel testing (optional)
