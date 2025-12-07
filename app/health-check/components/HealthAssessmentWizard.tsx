@@ -495,40 +495,10 @@ export function HealthAssessmentWizard() {
               Discover Your Health Score
             </span>
           </h2>
-          <p className="text-base sm:text-lg text-gray-300 mb-6 sm:mb-8 max-w-xl mx-auto px-2 leading-relaxed">
+          <p className="text-base sm:text-lg text-gray-300 mb-8 sm:mb-10 max-w-xl mx-auto px-2 leading-relaxed">
             Get your personalized health assessment in under 60 seconds. 
             Receive expert recommendations tailored to your goals.
           </p>
-        </div>
-        
-        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mb-6 sm:mb-8">
-          <div className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-xl p-5 sm:p-6 border border-gray-700/50 hover:border-red-500/30 transition-all hover:shadow-lg hover:shadow-red-500/10">
-            <div className="text-center mb-2">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-600/20 border border-red-500/30 mb-3">
-                <span className="text-red-400 font-bold text-xl">12</span>
-              </div>
-              <span className="text-white font-bold text-lg block">Questions</span>
-            </div>
-            <p className="text-sm text-gray-400">Quick & Easy</p>
-          </div>
-          <div className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-xl p-5 sm:p-6 border border-gray-700/50 hover:border-red-500/30 transition-all hover:shadow-lg hover:shadow-red-500/10">
-            <div className="text-center mb-2">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-600/20 border border-red-500/30 mb-3">
-                <span className="text-red-400 font-bold text-xl">⚡</span>
-              </div>
-              <span className="text-white font-bold text-lg block">Instant Score</span>
-            </div>
-            <p className="text-sm text-gray-400">0-100 Rating</p>
-          </div>
-          <div className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 rounded-xl p-5 sm:p-6 border border-gray-700/50 hover:border-red-500/30 transition-all hover:shadow-lg hover:shadow-red-500/10">
-            <div className="text-center mb-2">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-600/20 border border-red-500/30 mb-3">
-                <span className="text-red-400 font-bold text-xl">★</span>
-              </div>
-              <span className="text-white font-bold text-lg block">Expert Tips</span>
-            </div>
-            <p className="text-sm text-gray-400">Personalized</p>
-          </div>
         </div>
 
         {/* Found Assessment Display */}
