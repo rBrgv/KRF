@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import { trackViewContent } from '@/lib/metaPixel';
 
 /**
  * Health Check Tracker Component
@@ -12,12 +11,15 @@ import { trackViewContent } from '@/lib/metaPixel';
  */
 export function HealthCheckTracker() {
   useEffect(() => {
-    // Track ViewContent when the Health Check page is viewed
-    trackViewContent({
-      content_name: 'Health Check',
-      content_category: 'HealthScoreTest',
-    });
-  }, []);
+    // Fire ViewContent on page load (only once per page view)
+    if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+      window.fbq('track', 'ViewContent', {
+        content_name: 'Health Check',
+        content_category: 'HealthScoreTest',
+        page_path: '/health-check',
+      });
+    }
+  }, []); // Empty dependency array ensures it only fires once on mount
 
   // This component doesn't render anything
   return null;
