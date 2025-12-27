@@ -39,7 +39,7 @@ const plans = [
     perfectFor: "People who are confused on how to start, need structure, or want the push to get back on track.",
     popular: true,
     cta: "Start Your 4-Week Program",
-    link: "/contact",
+    link: "/programs/4-week-starter",
   },
   {
     name: "Master Transformation Program",
@@ -60,7 +60,7 @@ const plans = [
     perfectFor: "People serious about transformation, busy professionals, athletes, and anyone who wants long-term results with expert guidance.",
     popular: false,
     cta: "Enroll in Master Program",
-    link: "/contact",
+    link: "/programs/master-transformation",
   },
 ];
 
