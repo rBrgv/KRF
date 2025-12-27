@@ -23,29 +23,39 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     console.log('[Payment Order] Full request body:', JSON.stringify(body, null, 2));
     
-    const { event_registration_id, amount_in_inr } = body;
+    const { event_registration_id, program_registration_id, amount_in_inr } = body;
 
     console.log('[Payment Order] Request received:', {
       event_registration_id,
+      program_registration_id,
       amount_in_inr,
       event_registration_id_type: typeof event_registration_id,
+      program_registration_id_type: typeof program_registration_id,
       amount_in_inr_type: typeof amount_in_inr,
       hasKeyId: !!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
       hasKeySecret: !!process.env.RAZORPAY_KEY_SECRET,
     });
 
-    if (!event_registration_id || !amount_in_inr) {
-      console.error('[Payment Order] Missing required fields:', {
-        hasRegistrationId: !!event_registration_id,
-        hasAmount: !!amount_in_inr,
-        registrationId: event_registration_id,
-        amount: amount_in_inr,
-      });
+    // Must have exactly one registration ID
+    if ((!event_registration_id && !program_registration_id) || (event_registration_id && program_registration_id)) {
       return NextResponse.json(
         { 
-          error: 'event_registration_id and amount_in_inr are required',
+          error: 'Either event_registration_id or program_registration_id (but not both) and amount_in_inr are required',
           received: {
             event_registration_id: event_registration_id || null,
+            program_registration_id: program_registration_id || null,
+            amount_in_inr: amount_in_inr || null,
+          }
+        },
+        { status: 400 }
+      );
+    }
+
+    if (!amount_in_inr) {
+      return NextResponse.json(
+        { 
+          error: 'amount_in_inr is required',
+          received: {
             amount_in_inr: amount_in_inr || null,
           }
         },
@@ -104,33 +114,52 @@ export async function POST(request: NextRequest) {
 
     const supabase = await createClient();
 
-    // Get registration and event details
-    console.log('[Payment Order] Fetching registration:', event_registration_id);
-    const { data: registration, error: regError } = await supabase
-      .from('event_registrations')
-      .select('*, events:event_id(title)')
-      .eq('id', event_registration_id)
-      .single();
+    // Get registration details (event or program)
+    let registration: any;
+    let registrationType: 'event' | 'program';
+    let title: string;
 
-    if (regError) {
-      console.error('[Payment Order] Registration fetch error:', regError);
-      return NextResponse.json(
-        { error: 'Registration not found', details: regError.message },
-        { status: 404 }
-      );
-    }
+    if (event_registration_id) {
+      registrationType = 'event';
+      console.log('[Payment Order] Fetching event registration:', event_registration_id);
+      const { data, error: regError } = await supabase
+        .from('event_registrations')
+        .select('*, events:event_id(title)')
+        .eq('id', event_registration_id)
+        .single();
 
-    if (!registration) {
-      console.error('[Payment Order] Registration not found for ID:', event_registration_id);
-      return NextResponse.json(
-        { error: 'Registration not found' },
-        { status: 404 }
-      );
+      if (regError || !data) {
+        console.error('[Payment Order] Event registration fetch error:', regError);
+        return NextResponse.json(
+          { error: 'Event registration not found', details: regError?.message },
+          { status: 404 }
+        );
+      }
+      registration = data;
+      title = data.events?.title || 'Event Registration';
+    } else {
+      registrationType = 'program';
+      console.log('[Payment Order] Fetching program registration:', program_registration_id);
+      const { data, error: regError } = await supabase
+        .from('program_registrations')
+        .select('*')
+        .eq('id', program_registration_id)
+        .single();
+
+      if (regError || !data) {
+        console.error('[Payment Order] Program registration fetch error:', regError);
+        return NextResponse.json(
+          { error: 'Program registration not found', details: regError?.message },
+          { status: 404 }
+        );
+      }
+      registration = data;
+      title = data.program_title || 'Program Registration';
     }
 
     console.log('[Payment Order] Registration found:', {
       id: registration.id,
-      event_id: registration.event_id,
+      type: registrationType,
       status: registration.status,
     });
 
@@ -145,10 +174,10 @@ export async function POST(request: NextRequest) {
     });
 
     // Generate receipt (max 40 chars for Razorpay)
-    // Use first 8 chars of registration ID + timestamp (last 8 digits)
-    const regIdShort = event_registration_id.substring(0, 8);
+    const registrationId = event_registration_id || program_registration_id;
+    const regIdShort = registrationId.substring(0, 8);
     const timestamp = Date.now().toString().slice(-8);
-    const receipt = `reg${regIdShort}${timestamp}`;
+    const receipt = `${registrationType === 'event' ? 'evt' : 'prg'}${regIdShort}${timestamp}`;
     
     // Ensure receipt is max 40 chars
     const receiptFinal = receipt.length > 40 ? receipt.substring(0, 40) : receipt;
@@ -158,7 +187,9 @@ export async function POST(request: NextRequest) {
       currency: 'INR',
       receipt: receiptFinal,
       notes: {
-        event_registration_id: event_registration_id,
+        ...(event_registration_id && { event_registration_id }),
+        ...(program_registration_id && { program_registration_id }),
+        registration_type: registrationType,
       },
     };
 
@@ -211,16 +242,23 @@ export async function POST(request: NextRequest) {
     }
 
     // Link payment to registration (optional, will be updated on success)
-    await supabase
-      .from('event_registrations')
-      .update({ payment_id: payment.id })
-      .eq('id', event_registration_id);
+    if (registrationType === 'event') {
+      await supabase
+        .from('event_registrations')
+        .update({ payment_id: payment.id })
+        .eq('id', event_registration_id);
+    } else {
+      await supabase
+        .from('program_registrations')
+        .update({ payment_id: payment.id })
+        .eq('id', program_registration_id);
+    }
 
     return NextResponse.json({
       order_id: razorpayOrder.id,
       amount: razorpayOrder.amount,
       currency: razorpayOrder.currency,
-      event_title: registration.events?.title,
+      title: title,
       payment_id: payment.id,
     });
   } catch (error: any) {

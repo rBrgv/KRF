@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { BookingSlotForm } from '@/components/forms/BookingSlotForm';
 import { BookingSuccessModal } from '@/components/modals/BookingSuccessModal';
+import { ProgramRegistrationForm } from '@/components/forms/ProgramRegistrationForm';
 
 const offlineServices = [
   {
@@ -45,18 +46,30 @@ const onlineServices = [
     title: '11 Days Free Mindset + Fitness Trial',
     description: 'Perfect for people who are confused, stuck, or scared to start.',
     link: '/programs/11-day-trial',
+    originalPrice: 2999,
+    currentPrice: 0,
+    programName: '11-day-trial',
+    programTitle: '11 Days Free Mindset + Fitness Trial',
   },
   {
     slug: '4-week-starter',
     title: '4 Weeks Starter Program',
     description: 'Best for people who want a plan, guidance, and accountability without spending big.',
     link: '/programs/4-week-starter',
+    originalPrice: 2999,
+    currentPrice: 999,
+    programName: '4-week-starter',
+    programTitle: '4 Weeks Starter Program',
   },
   {
     slug: 'master-transformation',
     title: 'Master Transformation Program',
     description: 'Your signature, high-value 12-week program to get serious, guaranteed transformation.',
     link: '/programs/master-transformation',
+    originalPrice: 15000,
+    currentPrice: 5899,
+    programName: 'master-transformation',
+    programTitle: 'Master Transformation Program',
   },
 ];
 
@@ -68,6 +81,13 @@ export function ServicesPageClient() {
     serviceName: string;
     serviceType: 'offline' | 'online';
   }>({ isOpen: false, serviceName: '', serviceType: 'offline' });
+  
+  const [paymentModal, setPaymentModal] = useState<{
+    isOpen: boolean;
+    programName: string;
+    programTitle: string;
+    programPrice: number;
+  }>({ isOpen: false, programName: '', programTitle: '', programPrice: 0 });
   
   const [successModal, setSuccessModal] = useState<{
     isOpen: boolean;
@@ -139,7 +159,29 @@ export function ServicesPageClient() {
             {onlineServices.map((service) => (
               <div key={service.slug} className="premium-card rounded-2xl p-8 hover:border-red-500/50 transition-all">
                 <h3 className="text-xl font-bold text-white mb-3">{service.title}</h3>
-                <p className="text-gray-400 mb-6 text-sm leading-relaxed">{service.description}</p>
+                <p className="text-gray-400 mb-4 text-sm leading-relaxed">{service.description}</p>
+                
+                {/* Pricing Display */}
+                <div className="mb-6">
+                  {service.currentPrice === 0 ? (
+                    <div>
+                      <span className="text-2xl font-bold text-green-400">FREE</span>
+                      <p className="text-xs text-gray-500 mt-1">
+                        ₹{service.originalPrice} worth - Completely Free
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-baseline gap-2 mb-2">
+                        <span className="text-2xl font-bold text-red-400">₹{service.currentPrice}</span>
+                        <span className="text-sm text-gray-500 line-through">₹{service.originalPrice}</span>
+                      </div>
+                      <p className="text-xs text-gray-500">
+                        ₹{service.originalPrice} worth @₹{service.currentPrice}
+                      </p>
+                    </>
+                  )}
+                </div>
                 
                 <div className="flex flex-col gap-3">
                   <Link
@@ -148,12 +190,26 @@ export function ServicesPageClient() {
                   >
                     Learn More
                   </Link>
-                  <button
-                    onClick={() => setBookingModal({ isOpen: true, serviceName: service.title, serviceType: 'online' })}
-                    className="w-full rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 font-semibold hover:from-red-700 hover:to-red-800 transition-all"
-                  >
-                    Book Consultation
-                  </button>
+                  {service.currentPrice === 0 ? (
+                    <Link
+                      href={service.link}
+                      className="w-full text-center rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 font-semibold hover:from-red-700 hover:to-red-800 transition-all"
+                    >
+                      Get Started Free
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={() => setPaymentModal({ 
+                        isOpen: true, 
+                        programName: service.programName, 
+                        programTitle: service.programTitle,
+                        programPrice: service.currentPrice
+                      })}
+                      className="w-full rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 font-semibold hover:from-red-700 hover:to-red-800 transition-all"
+                    >
+                      Enroll Now - ₹{service.currentPrice}
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
@@ -169,6 +225,28 @@ export function ServicesPageClient() {
           onClose={() => setBookingModal({ isOpen: false, serviceName: '', serviceType: 'offline' })}
           onSuccess={handleBookingSuccess}
         />
+      )}
+
+      {/* Payment Modal */}
+      {paymentModal.isOpen && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-900 rounded-2xl p-6 md:p-8 max-w-md w-full border border-gray-800 relative max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setPaymentModal({ isOpen: false, programName: '', programTitle: '', programPrice: 0 })}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors z-10"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <h3 className="text-2xl font-bold text-white mb-6">Enroll in {paymentModal.programTitle}</h3>
+            <ProgramRegistrationForm
+              programName={paymentModal.programName}
+              programTitle={paymentModal.programTitle}
+              programPrice={paymentModal.programPrice}
+            />
+          </div>
+        </div>
       )}
 
       {/* Success Modal */}

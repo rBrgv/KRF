@@ -10,6 +10,7 @@ export async function POST(request: NextRequest) {
       razorpay_payment_id,
       razorpay_signature,
       registration_id,
+      program_registration_id,
     } = body;
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
@@ -44,13 +45,19 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (paymentRecord) {
-      // Update payment status
+      // Update payment status - store signature in raw_payload
+      const updatedPayload = {
+        ...(paymentRecord.raw_payload || {}),
+        razorpay_signature: razorpay_signature,
+        razorpay_payment_id: razorpay_payment_id,
+      };
+      
       await supabase
         .from('payments')
         .update({
           status: 'success',
           provider_payment_id: razorpay_payment_id,
-          razorpay_signature: razorpay_signature,
+          raw_payload: updatedPayload,
         })
         .eq('id', paymentRecord.id);
 
@@ -63,6 +70,17 @@ export async function POST(request: NextRequest) {
             payment_id: paymentRecord.id,
           })
           .eq('id', registration_id);
+      }
+
+      // Update program registration if program_registration_id provided
+      if (program_registration_id) {
+        await supabase
+          .from('program_registrations')
+          .update({
+            status: 'confirmed',
+            payment_id: paymentRecord.id,
+          })
+          .eq('id', program_registration_id);
       }
     }
 

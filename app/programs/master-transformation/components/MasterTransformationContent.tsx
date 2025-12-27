@@ -3,21 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ScrollAnimation } from '@/components/ScrollAnimation';
-import { BookingSlotForm } from '@/components/forms/BookingSlotForm';
-import { BookingSuccessModal } from '@/components/modals/BookingSuccessModal';
+import { ProgramRegistrationForm } from '@/components/forms/ProgramRegistrationForm';
 import { Check, Target, Calendar, MessageCircle, TrendingUp, Video, Award, Zap, Shield, ArrowRight } from 'lucide-react';
 
 export function MasterTransformationContent() {
-  const [showBookingForm, setShowBookingForm] = useState(false);
-  const [successModal, setSuccessModal] = useState<{
-    isOpen: boolean;
-    whatsappUrl: string;
-  }>({ isOpen: false, whatsappUrl: '' });
-
-  const handleBookingSuccess = (appointmentId: string, leadId: string, whatsappUrl: string) => {
-    setShowBookingForm(false);
-    setSuccessModal({ isOpen: true, whatsappUrl });
-  };
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const PROGRAM_PRICE = 5899;
 
   return (
     <div className="min-h-screen bg-gray-900">
@@ -157,10 +148,10 @@ export function MasterTransformationContent() {
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <button
-                onClick={() => setShowBookingForm(true)}
+                onClick={() => setShowPaymentForm(true)}
                 className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white px-10 py-4 text-lg font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-300 shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:shadow-[0_0_30px_rgba(220,38,38,0.5)] hover:scale-105"
               >
-                Book Consultation
+                Enroll Now - ₹{PROGRAM_PRICE}
                 <ArrowRight className="w-5 h-5" />
               </button>
               <Link
@@ -174,22 +165,26 @@ export function MasterTransformationContent() {
         </div>
       </section>
 
-      {/* Booking Form Modal */}
-      {showBookingForm && (
-        <BookingSlotForm
-          serviceName="Master Transformation Program"
-          serviceType="online"
-          onClose={() => setShowBookingForm(false)}
-          onSuccess={handleBookingSuccess}
-        />
-      )}
-
-      {/* Success Modal */}
-      {successModal.isOpen && (
-        <BookingSuccessModal
-          whatsappUrl={successModal.whatsappUrl}
-          onClose={() => setSuccessModal({ isOpen: false, whatsappUrl: '' })}
-        />
+      {/* Payment Form Modal */}
+      {showPaymentForm && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-900 rounded-2xl p-6 md:p-8 max-w-md w-full border border-gray-800 relative">
+            <button
+              onClick={() => setShowPaymentForm(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <h3 className="text-2xl font-bold text-white mb-6">Enroll in Master Transformation Program</h3>
+            <ProgramRegistrationForm
+              programName="master-transformation"
+              programTitle="Master Transformation Program"
+              programPrice={PROGRAM_PRICE}
+            />
+          </div>
+        </div>
       )}
     </div>
   );
