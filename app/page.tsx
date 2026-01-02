@@ -8,6 +8,7 @@ import { TransformationGallery } from "@/components/TransformationGallery";
 import { AboutStudioSection } from "@/components/AboutStudioSection";
 import { HeroVideoBackground } from "@/components/HeroVideoBackground";
 import { HeroSection } from "@/components/HeroSection";
+import { YouTubePlaylist } from "@/components/YouTubePlaylist";
 
 export const metadata: Metadata = {
   title: "Best Gym in Bangalore | Gym Near Me | Online Gym Training | KR Fitness",
@@ -188,6 +189,35 @@ export default function HomePage() {
         <TransformationGallery />
       </ScrollAnimation>
 
+
+      {/* Section Divider */}
+      <div className="section-divider"></div>
+
+      {/* Podcast Series Section */}
+      <section className="relative py-20 px-4 bg-gray-900 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(220,38,38,0.05),transparent_50%)]"></div>
+        <div className="container mx-auto max-w-7xl relative z-10">
+          <ScrollAnimation>
+            <div className="text-center mb-8">
+              <span className="inline-block px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-xs font-semibold uppercase tracking-wider text-red-400 mb-3">
+                Podcast Series
+              </span>
+              <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                Watch My Podcast Playlist
+              </h3>
+              <p className="text-gray-300 mb-6 leading-relaxed max-w-2xl mx-auto">
+                Explore insightful conversations, fitness tips, and transformation stories through my podcast series. Learn from real experiences and expert insights on health, fitness, and personal transformation.
+              </p>
+            </div>
+            
+            {/* YouTube Playlist Embed */}
+            <YouTubePlaylist 
+              playlistId="PL9HYtTMWoRPIVqpx3WlmMKAW4-Ae8XpcC"
+              maxVideos={6}
+            />
+          </ScrollAnimation>
+        </div>
+      </section>
 
       {/* Section Divider */}
       <div className="section-divider"></div>
